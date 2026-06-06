@@ -1,13 +1,13 @@
 site_name: Implementation Plans
-site_url: ""
+site_url: ''
 theme:
   name: material
   palette:
     scheme: slate
     primary: indigo
 plugins:
-  - glightbox
+- glightbox
 nav:
-  - Home: index.md
-  - Plans:
-    - "(Plans will appear here)": plans/.gitkeep
+- Home: index.md
+- Plans:
+  - "Issue #2 \u2013 Optimize DAGOrchestrator wall-clock execution": plans/issue-2-plan.md

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+  <div class="diagram">
+    <h2 class="diagram-title">Dequeue Optimization: Sequential vs Concurrent Spawning</h2>
+    <div class="diagram-comparison">
+      <div class="diagram-comparison-side before">
+        <div class="diagram-box main">
+          <div class="diagram-box-title">BEFORE: Sequential Await</div>
+          <div class="diagram-steps">
+            <div class="diagram-step">
+              <span class="diagram-step-num">1</span>
+              <span class="diagram-step-text">await spawnDiscoveryChild(task1)</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step">
+              <span class="diagram-step-num">2</span>
+              <span class="diagram-step-text">await spawnDiscoveryChild(task2)</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step">
+              <span class="diagram-step-num">3</span>
+              <span class="diagram-step-text">await spawnDiscoveryChild(task3)</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step error">
+              <span class="diagram-step-num">!</span>
+              <span class="diagram-step-text">3 slots free, but 3× startup latency</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-comparison-side after">
+        <div class="diagram-box renderer">
+          <div class="diagram-box-title">AFTER: Fire-and-Forget</div>
+          <div class="diagram-steps">
+            <div class="diagram-step success">
+              <span class="diagram-step-num">1</span>
+              <span class="diagram-step-text">spawnDiscoveryChild(task1).catch(...)</span>
+            </div>
+            <div class="diagram-step success">
+              <span class="diagram-step-num">2</span>
+              <span class="diagram-step-text">spawnDiscoveryChild(task2).catch(...)</span>
+            </div>
+            <div class="diagram-step success">
+              <span class="diagram-step-num">3</span>
+              <span class="diagram-step-text">spawnDiscoveryChild(task3).catch(...)</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step success">
+              <span class="diagram-step-num">✓</span>
+              <span class="diagram-step-text">All 3 spawn concurrently — single startup latency</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
