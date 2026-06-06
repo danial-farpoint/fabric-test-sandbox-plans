@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+  <div class="diagram">
+    <h2 class="diagram-title">BEFORE: Serial Test Execution</h2>
+    <div class="diagram-comparison">
+      <div class="diagram-comparison-side before">
+        <div class="diagram-box main">
+          <div class="diagram-box-title">opQueue</div>
+          <div class="diagram-steps">
+            <div class="diagram-step">
+              <span class="diagram-step-num">1</span>
+              <span class="diagram-step-text">Task A: run RED tests (3s) → blocked</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step">
+              <span class="diagram-step-num">2</span>
+              <span class="diagram-step-text">Task B: run RED tests (3s) → blocked</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step">
+              <span class="diagram-step-num">3</span>
+              <span class="diagram-step-text">Task C: run RED tests (3s) → blocked</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step error">
+              <span class="diagram-step-num">!</span>
+              <span class="diagram-step-text">Total: 25 sequential waits = ~75s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-comparison-side after">
+        <div class="diagram-box renderer">
+          <div class="diagram-box-title">Parallel Test Execution</div>
+          <div class="diagram-steps">
+            <div class="diagram-step success">
+              <span class="diagram-step-num">1</span>
+              <span class="diagram-step-text">Task A: run RED tests (3s) ✓</span>
+            </div>
+            <div class="diagram-step success">
+              <span class="diagram-step-num">2</span>
+              <span class="diagram-step-text">Task B: run RED tests (3s) ✓ concurrent</span>
+            </div>
+            <div class="diagram-step success">
+              <span class="diagram-step-num">3</span>
+              <span class="diagram-step-text">Task C: run RED tests (3s) ✓ concurrent</span>
+            </div>
+            <div class="diagram-connector"></div>
+            <div class="diagram-step success">
+              <span class="diagram-step-num">✓</span>
+              <span class="diagram-step-text">Total: 5 parallel batches = ~15s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
