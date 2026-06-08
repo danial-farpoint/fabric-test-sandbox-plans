@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Journey: Clearing a Draft</title>
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+  <div class="diagram">
+    <div class="diagram-title">User Journey: Clearing a Draft</div>
+
+    <div class="diagram-journey">
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User starts typing a message</div>
+        <div class="diagram-journey-response">Text appears in input field</div>
+      </div>
+
+      <div class="diagram-connector"></div>
+
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User pastes a screenshot</div>
+        <div class="diagram-journey-response">Image thumbnail appears above input</div>
+      </div>
+
+      <div class="diagram-connector"></div>
+
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User changes their mind</div>
+        <div class="diagram-journey-response">
+          <span class="diagram-step-code">Reset (×)</span> button is now visible in controls
+        </div>
+      </div>
+
+      <div class="diagram-connector"></div>
+
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User clicks reset button (or presses Escape)</div>
+        <div class="diagram-journey-response success">
+          ✓ Text cleared<br>
+          ✓ Images removed<br>
+          ✓ Attachments removed<br>
+          ✓ File mentions cleared<br>
+          ✓ MCP resources cleared<br>
+          ✓ Input refocused
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

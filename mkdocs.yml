@@ -11,3 +11,4 @@ nav:
 - Home: index.md
 - Plans:
   - "Issue #2 \u2013 Optimize DAGOrchestrator wall-clock execution": plans/issue-2-plan.md
+  - "Issue #3 \u2013 Add reset button to chat input": plans/issue-3-plan.md

@@ -1,0 +1,1095 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Issue #2 – Optimize DAGOrchestrator wall-clock execution - Implementation Plans</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#issue-2-optimize-dagorchestrator-wall-clock-execution-time-for-10-task-dags" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Implementation Plans" class="md-header__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Implementation Plans
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Issue #2 – Optimize DAGOrchestrator wall-clock execution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Implementation Plans" class="md-nav__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Implementation Plans
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plans
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plans
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Optimize DAGOrchestrator wall-clock execution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Optimize DAGOrchestrator wall-clock execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-move-test-execution-outside-the-serial-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Move test execution outside the serial queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fire-and-forget-dequeue-spawning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fire-and-forget dequeue spawning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cache-running-count-incrementally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Cache running count incrementally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-reduce-status-sync-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Reduce status sync frequency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-trim-generation-monitor-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Trim generation monitor overhead
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serial-vs-parallel-test-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serial vs Parallel Test Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dequeue-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dequeue Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Impact
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-move-test-execution-outside-the-serial-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Move test execution outside the serial queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-fire-and-forget-dequeue-spawning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Fire-and-forget dequeue spawning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cache-running-count-incrementally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Cache running count incrementally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-reduce-status-sync-frequency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Reduce status sync frequency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-trim-generation-monitor-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Trim generation monitor overhead
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serial-vs-parallel-test-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serial vs Parallel Test Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dequeue-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dequeue Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expected-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expected Impact
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="issue-2-optimize-dagorchestrator-wall-clock-execution-time-for-10-task-dags">Issue #2: Optimize DAGOrchestrator wall-clock execution time for ~10-task DAGs</h1>
+<h2 id="summary">Summary</h2>
+<p>Eliminate structural serialization bottlenecks in <code>DAGOrchestrator</code> and <code>useDAGOrchestrator</code> that force concurrent-capable operations (test execution, task spawning, status computation) to run sequentially. For a 10-task DAG with <code>maxConcurrent=5</code>, these bottlenecks add ~60–75 seconds of pure wait time.</p>
+<h2 id="root-cause-analysis">Root Cause Analysis</h2>
+<p>The orchestrator uses a single global <code>opQueue</code> Promise chain (<code>this.enqueue()</code>) to serialize <em>all</em> async operations. While this prevents race conditions, it also blocks independent work:</p>
+<ol>
+<li>
+<p><strong>Test execution serializes the pipeline</strong> — <code>runRedVerification</code> and <code>runGreenEvaluation</code> each <code>await</code> the <code>tdd:run-tests</code> IPC call inside the queue. With 10 tasks × ~2.5 test runs each ≈ 25 sequential waits at ~3s each, tests alone consume ~75s of wall-clock time even though the test runner can handle multiple concurrent invocations.</p>
+</li>
+<li>
+<p><strong>Dequeue spawns one-at-a-time</strong> — <code>dequeueNext()</code> uses <code>await this.spawnDiscoveryChild(nextTask)</code> in a <code>while</code> loop. When 3 slots free up simultaneously, tasks 2 and 3 wait for task 1's tab creation + IPC registration + message cloning to finish before they start.</p>
+</li>
+<li>
+<p><strong>O(n) running count scan</strong> — <code>getRunningCount()</code> iterates all <code>taskRegistry.values()</code> every time it's called, which happens inside <code>doOnTasksReady</code> (once per task) and <code>dequeueNext</code>.</p>
+</li>
+<li>
+<p><strong>Unconditional 1s status polling</strong> — <code>useDAGOrchestrator</code> calls <code>getFullStatus()</code> every 1000ms via <code>setInterval</code>, rebuilding the entire <code>OrchestratorStatus</code> object even when nothing changed.</p>
+</li>
+<li>
+<p><strong>Generation monitor allocates on every stop</strong> — <code>subscribeToGeneratingChanges</code> callback builds <code>Array.from(this.tabToTask.keys())</code> and a joined string for every generation-complete event in the entire app, even for non-DAG tabs.</p>
+</li>
+</ol>
+<h2 id="proposed-solution">Proposed Solution</h2>
+<h3 id="1-move-test-execution-outside-the-serial-queue">1. Move test execution outside the serial queue</h3>
+<p>Change <code>runRedVerification</code> and <code>runGreenEvaluation</code> to:
+1. Enter the queue to set phase → <code>red_verification</code> / <code>green_evaluation</code>
+2. <strong>Exit the queue</strong> to run tests async
+3. Re-enter the queue to handle results with phase guards</p>
+<p>Add a <code>runTestsAsync</code> helper:</p>
+<pre><code class="language-typescript">private async runTestsAsync(
+  entry: TaskEntry,
+  phase: "red_verification" | "green_evaluation",
+  onResult: (result: TestRunResult) =&gt; Promise&lt;void&gt;,
+): Promise&lt;void&gt; {
+  const projectCwd = getProjectStoreState()?.currentProjectPath ?? undefined;
+  const result: TestRunResult = await window.electronAPI!.ipcRenderer.invoke(
+    "tdd:run-tests",
+    entry.testScript,
+    projectCwd,
+  );
+
+  // Re-enter queue to handle result atomically
+  await this.enqueue(async () =&gt; {
+    const current = this.taskRegistry.get(entry.taskId);
+    if (!current || current.phase !== phase) return; // Stale — task moved on
+    await onResult(result);
+  });
+}
+</code></pre>
+<p>The result handler must guard against stale phase (task may have been cancelled, split, or escalated while tests ran).</p>
+<h3 id="2-fire-and-forget-dequeue-spawning">2. Fire-and-forget dequeue spawning</h3>
+<p>In <code>dequeueNext</code>, change:</p>
+<pre><code class="language-typescript">// BEFORE
+await this.spawnDiscoveryChild(nextTask);
+
+// AFTER
+this.spawnDiscoveryChild(nextTask).catch((err) =&gt; {
+  logger.error(LogCategory.CHAT, "[DAGOrchestrator] dequeue spawn failed:", err);
+  // spawnDiscoveryChild already handles registry cleanup on failure
+});
+</code></pre>
+<p><code>spawnDiscoveryChild</code> already handles its own registry state and failure paths. Multiple calls are safe because each task has a unique ID and the registry deduplicates.</p>
+<h3 id="3-cache-running-count-incrementally">3. Cache running count incrementally</h3>
+<p>Add a private counter and update it explicitly:</p>
+<pre><code class="language-typescript">private _runningCount = 0;
+
+private getRunningCount(): number {
+  return this._runningCount;
+}
+
+private incrementRunningCount(delta: number): void {
+  this._runningCount += delta;
+}
+</code></pre>
+<p>Update sites:
+- <code>createTaskEntry</code>: if phase is "active", increment
+- <code>doOnTasksReady</code>: increment for each task that transitions to <code>discovery_in_progress</code>
+- <code>dequeueNext</code>: increment when dequeuing to <code>discovery_in_progress</code>
+- <code>runRedVerification</code> / <code>runGreenEvaluation</code>: decrement when leaving active phase, increment when entering
+- Phase transition methods: adjust on every phase change to/from active states
+- <code>getRunningCount()</code>: return cached value</p>
+<p>Active phases: <code>discovery_in_progress</code>, <code>awaiting_generation_complete</code>, <code>red_verification</code>, <code>implementing</code>, <code>green_evaluation</code>, <code>discovery_self_review</code>, <code>revision_in_progress</code>.</p>
+<h3 id="4-reduce-status-sync-frequency">4. Reduce status sync frequency</h3>
+<p>In <code>useDAGOrchestrator.ts</code>, change the sync interval from 1000ms to 3000ms:</p>
+<pre><code class="language-typescript">// BEFORE
+syncIntervalRef.current = setInterval(() =&gt; { ... }, 1000);
+
+// AFTER
+syncIntervalRef.current = setInterval(() =&gt; { ... }, 3000);
+</code></pre>
+<p>The existing <code>syncTickCount</code> logic (immediate first save, then every 3rd tick debounced) combined with the slower interval reduces <code>getFullStatus()</code> calls from ~1/s to ~1/9s — a 9× reduction in status rebuilds.</p>
+<h3 id="5-trim-generation-monitor-overhead">5. Trim generation monitor overhead</h3>
+<p>Remove the <code>trackedIds</code> array allocation from <code>subscribeToGeneratingChanges</code> callback. The existing <code>tracked</code> boolean check is sufficient for the common case (non-DAG tabs). The detailed tab list logging can be moved to a debug-level log or removed entirely:</p>
+<pre><code class="language-typescript">// BEFORE
+const tracked = this.tabToTask.has(chatId);
+const trackedIds = Array.from(this.tabToTask.keys());
+logger.info(LogCategory.CHAT, `[DAGOrchestrator] generationChange: chatId=${chatId} stopped generating. tracked=${tracked} trackedTabs=[${trackedIds.join(",")}]`);
+
+// AFTER
+const tracked = this.tabToTask.has(chatId);
+if (tracked) {
+  logger.info(LogCategory.CHAT, `[DAGOrchestrator] generationChange: chatId=${chatId} stopped generating.`);
+  this.extractAndAccumulateCost(chatId);
+  this.onGenerationComplete(chatId);
+}
+</code></pre>
+<h2 id="files-to-modify">Files to Modify</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/renderer/Services/AgenticLoopOrchestration/DAGOrchestrator.ts</code></td>
+<td>Add <code>runTestsAsync</code> helper; refactor <code>runRedVerification</code> and <code>runGreenEvaluation</code> to use it; make <code>dequeueNext</code> fire-and-forget; add <code>_runningCount</code> cache with explicit updates; trim generation monitor logging</td>
+</tr>
+<tr>
+<td><code>src/renderer/hooks/useDAGOrchestrator.ts</code></td>
+<td>Change sync interval from 1000ms to 3000ms</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-files">New Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None</td>
+<td>All changes are in-place modifications</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-steps">Implementation Steps</h2>
+<ol>
+<li><strong>Add <code>runTestsAsync</code> helper</strong> to <code>DAGOrchestrator.ts</code></li>
+<li>Extract common test-running logic into a private method</li>
+<li>
+<p>Ensure it exits the queue for the IPC call and re-enters for result handling</p>
+</li>
+<li>
+<p><strong>Refactor <code>runRedVerification</code></strong></p>
+</li>
+<li>Replace inline <code>await window.electronAPI!.ipcRenderer.invoke("tdd:run-tests", ...)</code> with <code>runTestsAsync</code></li>
+<li>Move result handling into the <code>onResult</code> callback with phase guard</li>
+<li>
+<p>Ensure <code>dequeueNext()</code> is called from within the result handler</p>
+</li>
+<li>
+<p><strong>Refactor <code>runGreenEvaluation</code></strong></p>
+</li>
+<li>Same pattern as <code>runRedVerification</code></li>
+<li>Handle <code>allPassed</code> true/false branches in the result callback</li>
+<li>
+<p>Ensure <code>notifyTaskCompleted</code> and <code>dequeueNext</code> are called correctly</p>
+</li>
+<li>
+<p><strong>Make <code>dequeueNext</code> concurrent</strong></p>
+</li>
+<li>Change <code>await this.spawnDiscoveryChild(nextTask)</code> to fire-and-forget with <code>.catch()</code></li>
+<li>
+<p>Verify that <code>spawnDiscoveryChild</code> handles its own failures (it does — marks failed and calls <code>dequeueNext</code>)</p>
+</li>
+<li>
+<p><strong>Add <code>_runningCount</code> cache</strong></p>
+</li>
+<li>Add private field, initialize to 0</li>
+<li>Update at all phase transition sites</li>
+<li>
+<p>Replace O(n) scan in <code>getRunningCount()</code> with cached getter</p>
+</li>
+<li>
+<p><strong>Slow down status sync</strong></p>
+</li>
+<li>
+<p>Change interval in <code>useDAGOrchestrator.ts</code> from 1000ms to 3000ms</p>
+</li>
+<li>
+<p><strong>Trim generation monitor</strong></p>
+</li>
+<li>
+<p>Remove <code>trackedIds</code> array allocation and detailed logging from <code>subscribeToGeneratingChanges</code></p>
+</li>
+<li>
+<p><strong>Update tests</strong></p>
+</li>
+<li>Adjust <code>dagOrchestrator.test.ts</code> expectations for concurrent behavior</li>
+<li>Add tests for stale-phase guard in test result handlers</li>
+<li>
+<p>Add tests for <code>_runningCount</code> cache correctness</p>
+</li>
+<li>
+<p><strong>Run test suite</strong></p>
+</li>
+<li>Verify all DAG orchestrator tests pass</li>
+<li>Verify no regressions in discovery/impl/GREEN/RED lifecycle</li>
+</ol>
+<h2 id="test-strategy">Test Strategy</h2>
+<ul>
+<li><strong>Unit tests</strong>: <code>dagOrchestrator.test.ts</code></li>
+<li>Test that <code>runTestsAsync</code> correctly guards against stale phase</li>
+<li>Test that multiple queued tasks spawn concurrently (mock <code>handleAddChat</code> with delays, assert overlapping calls)</li>
+<li>Test that <code>_runningCount</code> stays consistent through all phase transitions</li>
+<li>
+<p>Test that test execution no longer blocks the opQueue (enqueue a second operation while tests "run", assert it executes before test result handler)</p>
+</li>
+<li>
+<p><strong>Integration tests</strong>: None required — changes are internal to orchestrator logic</p>
+</li>
+<li>
+<p><strong>Edge cases</strong>:</p>
+</li>
+<li>Task cancelled while tests are running → result handler must no-op (stale phase guard)</li>
+<li>Task split while tests are running → result handler must no-op</li>
+<li>Task escalated to human_review while tests are running → result handler must no-op</li>
+<li><code>dequeueNext</code> called while previous dequeue is still spawning → concurrent spawns must not conflict</li>
+<li><code>_runningCount</code> must never go negative (assertion in debug builds)</li>
+</ul>
+<h2 id="diagrams">Diagrams</h2>
+<h3 id="serial-vs-parallel-test-execution">Serial vs Parallel Test Execution</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-2-serial-vs-parallel.png" data-desc-position="bottom"><img alt="Serial vs Parallel Test Execution" src="../issue-2-serial-vs-parallel.png"></a></p>
+<h3 id="dequeue-optimization">Dequeue Optimization</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-2-dequeue-optimization.png" data-desc-position="bottom"><img alt="Dequeue Optimization" src="../issue-2-dequeue-optimization.png"></a></p>
+<h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Race condition: test results arrive after task moved to different phase</td>
+<td>Phase guard in result handler — check <code>current.phase === expectedPhase</code> before acting</td>
+</tr>
+<tr>
+<td>Race condition: concurrent <code>dequeueNext</code> calls spawn more than <code>maxConcurrent</code> tasks</td>
+<td><code>_runningCount</code> is updated atomically within <code>enqueue</code>; fire-and-forget spawns don't await, so the while loop condition is checked once per dequeue call</td>
+</tr>
+<tr>
+<td><code>spawnDiscoveryChild</code> failure not awaited → uncaught rejection</td>
+<td>Add <code>.catch()</code> handler that logs and ensures task is marked failed</td>
+</tr>
+<tr>
+<td><code>_runningCount</code> drifts from reality due to missed update site</td>
+<td>Add debug assertion <code>console.assert(_runningCount &gt;= 0)</code>; add unit test that walks all phase transitions and verifies count</td>
+</tr>
+<tr>
+<td>Status sync at 3s feels "laggy" in UI</td>
+<td>3s is still fast for background task progress; the first sync is immediate (syncTickCount === 1)</td>
+</tr>
+<tr>
+<td>Removing generation monitor logging loses debugging info</td>
+<td>Keep a single concise log line for tracked tabs; only remove the expensive <code>Array.from</code> + join</td>
+</tr>
+</tbody>
+</table>
+<h2 id="expected-impact">Expected Impact</h2>
+<ul>
+<li><strong>Test-wait serialization</strong>: ~25 sequential waits → ~5 parallel batches (20% of original time)</li>
+<li><strong>Dequeue latency</strong>: 3× startup latency → 1× startup latency for dependent chains</li>
+<li><strong>Status sync overhead</strong>: 1 rebuild/s → ~0.11 rebuild/s (9× reduction)</li>
+<li><strong>Generation monitor GC pressure</strong>: Eliminates <code>O(n)</code> array allocation on every generation stop across the app</li>
+<li><strong>Overall wall-clock</strong>: Estimated 20–40% reduction for 10-task DAGs with moderate test suites</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

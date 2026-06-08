@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Button State Machine</title>
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+  <div class="diagram">
+    <div class="diagram-title">Reset Button Visibility State Machine</div>
+
+    <div class="diagram-state-machine">
+      <div class="diagram-state idle">
+        <div class="diagram-box-title">HIDDEN</div>
+        <div class="diagram-flow-sublabel">No draft content</div>
+        <div class="diagram-flow-sublabel">(empty input)</div>
+      </div>
+
+      <div class="diagram-transition">
+        <div class="diagram-flow-arrow"></div>
+        <div class="diagram-flow-label">User types / attaches / mentions</div>
+      </div>
+
+      <div class="diagram-state active">
+        <div class="diagram-box-title">VISIBLE</div>
+        <div class="diagram-flow-sublabel">Draft content exists</div>
+        <div class="diagram-flow-sublabel">(text | images | files | mentions)</div>
+      </div>
+
+      <div class="diagram-transition">
+        <div class="diagram-flow-arrow"></div>
+        <div class="diagram-flow-label">Click reset or press Escape</div>
+      </div>
+
+      <div class="diagram-state idle">
+        <div class="diagram-box-title">HIDDEN</div>
+        <div class="diagram-flow-sublabel">Draft cleared</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
