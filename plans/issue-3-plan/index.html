@@ -1,0 +1,1152 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../issue-2-plan/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Issue #3 – Add reset button to chat input - Implementation Plans</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#issue-3-add-reset-button-to-chat-input-to-clear-draft-without-sending" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Implementation Plans" class="md-header__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Implementation Plans
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Issue #3 – Add reset button to chat input
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Implementation Plans" class="md-nav__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Implementation Plans
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plans
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plans
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-2-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Optimize DAGOrchestrator wall-clock execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #3 – Add reset button to chat input
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #3 – Add reset button to chat input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui-design-option-a-selected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Design (Option A — Selected)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-extract-reusable-cleardraft-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Extract reusable clearDraft() function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-resetbutton-styled-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Add ResetButton styled component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-add-reset-button-to-chatinput-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Add reset button to ChatInput controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-extend-escape-key-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Extend Escape key handler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-update-tabbablerefs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Update tabbableRefs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beforeafter-ui-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before/After UI Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-machine-reset-button-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Machine: Reset Button Visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-journey-clearing-a-draft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Journey: Clearing a Draft
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui-design-option-a-selected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Design (Option A — Selected)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-extract-reusable-cleardraft-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Extract reusable clearDraft() function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-resetbutton-styled-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Add ResetButton styled component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-add-reset-button-to-chatinput-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Add reset button to ChatInput controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-extend-escape-key-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Extend Escape key handler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-update-tabbablerefs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Update tabbableRefs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beforeafter-ui-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before/After UI Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-machine-reset-button-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State Machine: Reset Button Visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-journey-clearing-a-draft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Journey: Clearing a Draft
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="issue-3-add-reset-button-to-chat-input-to-clear-draft-without-sending">Issue #3 – Add reset button to chat input to clear draft without sending</h1>
+<h2 id="summary">Summary</h2>
+<p>Add a small reset/clear button to the chat input controls area that allows users to discard the current draft (text, images, attachments, and mentions) with a single click or via the Escape key, without sending the message.</p>
+<h2 id="root-cause-analysis">Root Cause Analysis</h2>
+<p>Currently, once a user starts composing a message in the chat input, the only ways to discard it are:</p>
+<ol>
+<li>Manually select all text and delete it (does not clear images/attachments/mentions)</li>
+<li>Send the message and then delete the sent message (roundabout and leaves artifacts)</li>
+</ol>
+<p>The <code>submitPrompt()</code> function in <code>ChatInput.tsx</code> (around line 2055) already contains the logic for clearing all draft state, but it is tightly coupled with the send action. There is no standalone way to clear draft state without triggering a workflow. The Escape key handler (around line 2097) currently only handles cancelling queued message edits — it can be extended to also clear normal drafts when no queued message is being edited.</p>
+<h2 id="proposed-solution">Proposed Solution</h2>
+<p>Extract the draft-clearing logic from <code>submitPrompt()</code> into a reusable <code>clearDraft()</code> function. Add a conditional reset button to the chat input controls that appears only when there is draft content. Wire the Escape key to clear drafts when no queued message edit is in progress.</p>
+<h3 id="ui-design-option-a-selected">UI Design (Option A — Selected)</h3>
+<p>A small circular icon button (× or reset icon) placed in the controls row, <strong>only visible when there is draft content</strong> (non-empty text, images, attachments, or mentions). This keeps the UI clean when the input is empty and provides one-click discovery.</p>
+<table>
+<thead>
+<tr>
+<th>Placement</th>
+<th>Visibility</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Option A</strong>: Icon button, conditional</td>
+<td>Only when content exists</td>
+<td>Clean empty state, one-click, minimal clutter</td>
+<td>Slight layout shift on appear/disappear</td>
+</tr>
+<tr>
+<td>Option B: Always-visible icon</td>
+<td>Always</td>
+<td>Consistent position, no layout shift</td>
+<td>Wasted space when empty, less clean</td>
+</tr>
+<tr>
+<td>Option C: Right-click context menu</td>
+<td>On demand</td>
+<td>Zero chrome</td>
+<td>Not discoverable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision</strong>: Option A — the conditional icon button is the right balance of discoverability and cleanliness. The button will be placed between the permission toggle and the summarize button on the left controls, or near the attachment button for spatial grouping with "input manipulation" actions.</p>
+<h2 id="files-to-modify">Files to Modify</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/renderer/Components/NewChatUI/ChatInput/ChatInput.tsx</code></td>
+<td>Extract <code>clearDraft()</code> from <code>submitPrompt()</code>; add <code>handleClearDraft()</code> handler; add reset button JSX; extend Escape key handler; update <code>tabbableRefs</code></td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/NewChatUI/ChatInput/ChatInputStyles.tsx</code></td>
+<td>Add <code>ResetButton</code> styled component (circular icon button, 30×30px, hover red tint)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-files">New Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/renderer/Components/NewChatUI/ChatInput/__tests__/ChatInput.reset.test.tsx</code></td>
+<td>Unit tests for reset button visibility, click handler, and Escape key behavior</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-steps">Implementation Steps</h2>
+<h3 id="step-1-extract-reusable-cleardraft-function">Step 1 — Extract reusable <code>clearDraft()</code> function</h3>
+<p>In <code>ChatInput.tsx</code>, extract the draft-clearing logic from the end of <code>submitPrompt()</code> (lines 2055–2068) into a standalone <code>clearDraft()</code> function:</p>
+<pre><code class="language-typescript">const clearDraft = useCallback(() =&gt; {
+  if (activeChatId) {
+    attachmentsBySessionRef.current.delete(activeChatId);
+  }
+  clearVoiceDictationOnSubmitPrompt();
+  setPrompt("");
+  setImages([]);
+  setAttachments([]);
+  setMcpResourceMentions([]);
+  setFileMentionContexts([]);
+  if (workflowMode !== "manual") {
+    useFileBrowserStore.getState().clearSelectionAndPersist();
+  }
+  setUploadError(null);
+  closeSlashCommandDropdown();
+  closeMentionDropdown();
+  inputRef.current?.focus();
+}, [activeChatId, workflowMode, clearVoiceDictationOnSubmitPrompt, setPrompt, setImages, setAttachments, closeSlashCommandDropdown, closeMentionDropdown]);
+</code></pre>
+<p>Replace the inline clearing in <code>submitPrompt()</code> with <code>clearDraft()</code>.</p>
+<h3 id="step-2-add-resetbutton-styled-component">Step 2 — Add <code>ResetButton</code> styled component</h3>
+<p>In <code>ChatInputStyles.tsx</code>, add a new styled component:</p>
+<pre><code class="language-typescript">const ResetButton = styled.button.attrs({ type: "button" })`
+  ${mixins.flexCenter}
+  flex-shrink: 0;
+  height: 30px;
+  width: 30px;
+  padding: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: ${themeColors.chatColors.messageBoxIcon};
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  opacity: 0.85;
+  transition:
+    background-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
+  cursor: pointer;
+
+  &amp;:hover {
+    background-color: ${themeColors.unifiedUi.backgroundLightHover};
+    box-shadow: ${themeShadows.buttonInset};
+    border: 1px solid ${themeColors.unifiedUi.background};
+    color: ${themeColors.appColors.deleteFileRed};
+  }
+
+  &amp;:focus-visible {
+    outline: 2px solid ${themeColors.appColors.mintAccent};
+  }
+`;
+</code></pre>
+<p>Export <code>ResetButton</code> from the module.</p>
+<h3 id="step-3-add-reset-button-to-chatinput-controls">Step 3 — Add reset button to ChatInput controls</h3>
+<p>Import <code>ResetButton</code> and <code>MdClear</code> (from <code>react-icons/md</code>) into <code>ChatInput.tsx</code>.</p>
+<p>Add a <code>hasDraftContent</code> boolean derived from input state:</p>
+<pre><code class="language-typescript">const hasDraftContent = prompt.trim() !== "" || images.length &gt; 0 || attachments.length &gt; 0 || mcpResourceMentions.length &gt; 0 || fileMentionContexts.length &gt; 0;
+</code></pre>
+<p>Insert the reset button into the <code>LeftControlsContainer</code>, after the attachment button and before the workflow mode toggle (or after the workflow mode toggle — placement should be tested for visual balance). The button only renders when <code>hasDraftContent</code> is true:</p>
+<pre><code class="language-tsx">{hasDraftContent &amp;&amp; (
+  &lt;&gt;
+    &lt;ControlSeparator /&gt;
+    &lt;ToolTipWrapper content="Clear draft" direction="top"&gt;
+      &lt;ResetButton
+        tabIndex={0}
+        role="button"
+        aria-label="Clear draft"
+        onClick={clearDraft}
+        onKeyDown={(e) =&gt; handleControlActivateKeyDown(e, clearDraft)}
+      &gt;
+        &lt;MdClear size={20} /&gt;
+      &lt;/ResetButton&gt;
+    &lt;/ToolTipWrapper&gt;
+  &lt;/&gt;
+)}
+</code></pre>
+<h3 id="step-4-extend-escape-key-handler">Step 4 — Extend Escape key handler</h3>
+<p>In <code>handleKeyDown</code>, extend the Escape handling (currently lines 2097–2121) so that when there is no queued message being edited, Escape clears the draft:</p>
+<pre><code class="language-typescript">if (e.key === "Escape") {
+  const editing = useMessageQueueStore.getState()._editingMessage;
+  if (editing &amp;&amp; activeChatId) {
+    // Existing queued-message edit cancellation...
+    return;
+  }
+  // NEW: Clear draft if there is content
+  if (hasDraftContent) {
+    e.preventDefault();
+    e.nativeEvent.stopImmediatePropagation();
+    clearDraft();
+    return;
+  }
+}
+</code></pre>
+<h3 id="step-5-update-tabbablerefs">Step 5 — Update <code>tabbableRefs</code></h3>
+<p>Add the reset button ref to <code>tabbableRefs</code> when visible, so keyboard tab navigation includes it:</p>
+<pre><code class="language-typescript">const resetButtonRef = useRef&lt;HTMLButtonElement&gt;(null);
+// ...
+const tabbableRefs = useMemo((): React.RefObject&lt;HTMLElement | null&gt;[] =&gt; {
+  const refs: React.RefObject&lt;HTMLElement | null&gt;[] = [
+    inputRef as React.RefObject&lt;HTMLElement | null&gt;,
+    voiceButtonRef,
+    attachmentButtonRef,
+  ];
+  if (hasDraftContent) {
+    refs.push(resetButtonRef);
+  }
+  refs.push(workflowModeRef);
+  // ... rest unchanged
+</code></pre>
+<h3 id="step-6-tests">Step 6 — Tests</h3>
+<p>Create <code>__tests__/ChatInput.reset.test.tsx</code> with tests covering:</p>
+<ol>
+<li><strong>Button visibility</strong>: Button is not rendered when input is empty; button is rendered when text/images/attachments/mentions exist.</li>
+<li><strong>Click handler</strong>: Clicking the button calls <code>clearDraft</code>, which clears text, images, attachments, mentions, and focuses the input.</li>
+<li><strong>Escape key</strong>: Pressing Escape when not editing a queued message and when draft content exists clears the draft.</li>
+<li><strong>Escape key (editing)</strong>: Pressing Escape when editing a queued message still cancels the edit (existing behavior preserved).</li>
+<li><strong>Pane scope</strong>: Clearing draft in a pane-scoped chat only clears that pane's draft.</li>
+</ol>
+<h2 id="test-strategy">Test Strategy</h2>
+<ul>
+<li><strong>Unit tests</strong>: <code>ChatInput.reset.test.tsx</code> — test the reset button visibility, click handler, and Escape key integration using <code>@testing-library/react</code> and mocked stores.</li>
+<li><strong>Integration tests</strong>: Manual verification that the button appears/disappears correctly as content is added/removed, and that the Escape key works in both queued-edit and normal-draft scenarios.</li>
+<li><strong>Edge cases</strong>:</li>
+<li>Clearing draft while dictation is active (should also discard pending dictation)</li>
+<li>Clearing draft in a pane vs global session</li>
+<li>Clearing draft with file browser selection active in agentic mode (should clear selection)</li>
+<li>Rapid Escape presses (should not double-clear or error)</li>
+<li>Clearing draft while uploading (should not interfere with upload)</li>
+</ul>
+<h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Layout shift when button appears/disappears</td>
+<td>Button uses <code>opacity</code> + <code>display</code> transition; placed in flex container that already handles variable content (permission toggle is also conditional)</td>
+</tr>
+<tr>
+<td>Escape key conflict with other listeners (slash command, mention dropdown, permission popover)</td>
+<td>The existing <code>handleKeyDown</code> already early-returns for dropdown-open states; clearDraft only fires when those are closed and no queued edit is active</td>
+</tr>
+<tr>
+<td>Forgetting to clear <code>mcpResourceMentions</code> or <code>fileMentionContexts</code></td>
+<td><code>clearDraft()</code> explicitly clears both, matching <code>submitPrompt()</code> behavior; added test assertions verify this</td>
+</tr>
+<tr>
+<td>Pane-scoped sessions not clearing correctly</td>
+<td><code>clearDraft()</code> uses <code>setPrompt()</code> which already handles pane-scoped <code>setInput()</code>; test with pane context</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagrams">Diagrams</h2>
+<h3 id="beforeafter-ui-flow">Before/After UI Flow</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-3-ui-flow.png" data-desc-position="bottom"><img alt="Before/After UI Flow" src="../issue-3-ui-flow.png"></a></p>
+<h3 id="state-machine-reset-button-visibility">State Machine: Reset Button Visibility</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-3-state-machine.png" data-desc-position="bottom"><img alt="Reset Button State Machine" src="../issue-3-state-machine.png"></a></p>
+<h3 id="user-journey-clearing-a-draft">User Journey: Clearing a Draft</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-3-user-journey.png" data-desc-position="bottom"><img alt="User Journey" src="../issue-3-user-journey.png"></a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
