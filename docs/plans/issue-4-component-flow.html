@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Issue #4 Component Flow</title>
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+<div class="diagram">
+  <div class="diagram-title">Issue #4 — Component Flow</div>
+
+  <div class="diagram-flow-horizontal">
+    <div class="diagram-box main">
+      <div class="diagram-box-title">ResponseContentDisplay</div>
+      <div style="font-size: 11px; color: #a6adc8;">Maps response segments</div>
+    </div>
+
+    <div class="diagram-ipc">
+      <div class="diagram-ipc-inner">
+        <div class="diagram-ipc-line"></div>
+        <div class="diagram-ipc-label">props</div>
+        <div class="diagram-ipc-arrow"></div>
+      </div>
+    </div>
+
+    <div class="diagram-box renderer">
+      <div class="diagram-box-title">MarkdownText</div>
+      <div style="font-size: 11px; color: #a6adc8;">Renders segment content</div>
+    </div>
+
+    <div class="diagram-ipc">
+      <div class="diagram-ipc-inner">
+        <div class="diagram-ipc-line"></div>
+        <div class="diagram-ipc-label">renders</div>
+        <div class="diagram-ipc-arrow"></div>
+      </div>
+    </div>
+
+    <div class="diagram-box main">
+      <div class="diagram-box-title">CodeBlockBody</div>
+      <div style="font-size: 11px; color: #a6adc8;">Header + syntax highlighter</div>
+    </div>
+  </div>
+
+  <div class="diagram-connector"></div>
+
+  <div class="diagram-steps">
+    <div class="diagram-step">
+      <div class="diagram-step-num">1</div>
+      <div class="diagram-step-text"><code class="diagram-step-code">segmentType === "terminal"</code> → render both <b>Run</b> and <b>Copy</b> buttons in <code class="diagram-step-code">.code-header-actions</code></div>
+    </div>
+    <div class="diagram-step">
+      <div class="diagram-step-num">2</div>
+      <div class="diagram-step-text">Click <b>Copy</b> → <code class="diagram-step-code">navigator.clipboard.writeText(innerCode)</code></div>
+    </div>
+    <div class="diagram-step">
+      <div class="diagram-step-num">3</div>
+      <div class="diagram-step-text">Set <code class="diagram-step-code">copied = true</code> → show <b>"Copied!"</b> label with checkmark icon</div>
+    </div>
+    <div class="diagram-step">
+      <div class="diagram-step-num">4</div>
+      <div class="diagram-step-text">1500ms timeout → set <code class="diagram-step-code">copied = false</code> → revert to copy icon</div>
+    </div>
+  </div>
+
+  <div class="diagram-connector"></div>
+
+  <div class="diagram-flow-horizontal" style="margin-top: 12px;">
+    <div class="diagram-box renderer" style="width: 180px;">
+      <div class="diagram-box-title">Icons.tsx</div>
+      <div style="font-size: 11px; color: #a6adc8;">CopyIcon + new CheckmarkIcon</div>
+    </div>
+
+    <div class="diagram-ipc">
+      <div class="diagram-ipc-inner">
+        <div class="diagram-ipc-line"></div>
+        <div class="diagram-ipc-label">styles</div>
+        <div class="diagram-ipc-arrow"></div>
+      </div>
+    </div>
+
+    <div class="diagram-box main" style="width: 240px;">
+      <div class="diagram-box-title">AssistantMessageStyles.tsx</div>
+      <div style="font-size: 11px; color: #a6adc8;">.code-header-actions + .copied-label</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
