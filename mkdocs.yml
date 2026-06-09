@@ -14,3 +14,4 @@ nav:
   - "Issue #3 \u2013 Add reset button to chat input": plans/issue-3-plan.md
   - "Issue #4 \u2013 Add copy button to code blocks": plans/issue-4-plan.md
   - "Issue #6 \u2013 Font-size slider in Settings": plans/issue-6-plan.md
+  - "Issue #7 \u2013 Optimize TaskDAGService Performance": plans/issue-7-plan.md

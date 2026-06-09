@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+  <div class="diagram">
+    <div class="diagram-title">Incremental Status Propagation Flow</div>
+
+    <div class="diagram-flow-horizontal" style="align-items:flex-start;gap:8px;">
+      <!-- Trigger -->
+      <div class="diagram-flow-node" style="min-width:100px;">
+        <div class="diagram-flow-label" style="color:#ff6b6b;">completeTask("t1")</div>
+        <div class="diagram-flow-sublabel">or skipTask("t1")</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- Look up dependents -->
+      <div class="diagram-flow-node" style="min-width:120px;">
+        <div class="diagram-flow-label" style="color:#4ecdc4;">Lookup Dependents</div>
+        <div class="diagram-flow-sublabel" style="font-family:monospace;">dependents.get("t1")</div>
+        <div class="diagram-flow-sublabel">→ {t2, t3}</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- For each dependent -->
+      <div class="diagram-flow-node" style="min-width:140px;">
+        <div class="diagram-flow-label" style="color:#f7b731;">Check Each Dependent</div>
+        <div class="diagram-flow-sublabel">For t2: deps=[t1]</div>
+        <div class="diagram-flow-sublabel">All deps terminal? ✅</div>
+        <div class="diagram-flow-sublabel" style="color:#6bcb77;">t2.status = "ready"</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- Recurse -->
+      <div class="diagram-flow-node" style="min-width:120px;">
+        <div class="diagram-flow-label" style="color:#a29bfe;">Recurse to Newly Ready</div>
+        <div class="diagram-flow-sublabel">t2's dependents: {t4}</div>
+        <div class="diagram-flow-sublabel">t4 deps=[t2,t3]</div>
+        <div class="diagram-flow-sublabel">t3 not ready yet → blocked</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- Result -->
+      <div class="diagram-flow-node" style="min-width:100px;">
+        <div class="diagram-flow-label" style="color:#6bcb77;">Return Result</div>
+        <div class="diagram-flow-sublabel">newlyReadyTasks: [t2]</div>
+        <div class="diagram-flow-sublabel" style="color:#888;font-size:10px;">Only visited t1→t2→t4,<br>not untouched tasks</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:12px;background:rgba(78,205,196,0.08);border-radius:8px;border:1px solid rgba(78,205,196,0.2);">
+      <div style="font-size:13px;color:#4ecdc4;font-weight:600;margin-bottom:6px;">Key Optimization</div>
+      <div style="font-size:12px;color:#ccc;">
+        Instead of scanning all tasks (O(V)), we only traverse the transitive closure of affected dependents.
+        In a sparse DAG with 500 tasks where completing one task unblocks 3 dependents, we visit ~4 tasks instead of 500.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
