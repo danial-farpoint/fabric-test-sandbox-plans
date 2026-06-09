@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../extra.css">
+  <title>User Journey Diagram</title>
+</head>
+<body>
+  <div class="diagram">
+    <div class="diagram-title">Issue #6 — User Journey</div>
+
+    <div class="diagram-journey">
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User opens Settings (Ctrl+, or menu)</div>
+        <div class="diagram-journey-response">Settings modal opens on General tab</div>
+      </div>
+
+      <div class="diagram-connector"></div>
+
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User scrolls to "Display / Accessibility" section</div>
+        <div class="diagram-journey-response">Slider shows current scale (default: 100%)</div>
+      </div>
+
+      <div class="diagram-connector"></div>
+
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User drags slider left (smaller) or right (larger)</div>
+        <div class="diagram-journey-response">Label updates in real-time (e.g. "125%"); chat text size updates immediately</div>
+      </div>
+
+      <div class="diagram-connector"></div>
+
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User closes Settings modal</div>
+        <div class="diagram-journey-response">Value is persisted to electron-store; survives app restart</div>
+      </div>
+
+      <div class="diagram-connector"></div>
+
+      <div class="diagram-journey-step">
+        <div class="diagram-journey-action">User reopens app later</div>
+        <div class="diagram-journey-response">Font size scale is restored from persisted preferences</div>
+      </div>
+    </div>
+
+    <div class="diagram-connector"></div>
+
+    <div class="diagram-comparison">
+      <div class="diagram-comparison-side before">
+        <div class="diagram-box-title">BEFORE</div>
+        <div class="diagram-steps">
+          <div class="diagram-step">
+            <span class="diagram-step-text">Chat text fixed at 14px</span>
+          </div>
+          <div class="diagram-step">
+            <span class="diagram-step-text">No user control over text size</span>
+          </div>
+          <div class="diagram-step error">
+            <span class="diagram-step-text">Accessibility gap for vision-impaired users</span>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-comparison-side after">
+        <div class="diagram-box-title">AFTER</div>
+        <div class="diagram-steps">
+          <div class="diagram-step success">
+            <span class="diagram-step-text">Chat text scales from 10.5px to 21px</span>
+          </div>
+          <div class="diagram-step success">
+            <span class="diagram-step-text">Slider in Settings controls scale (75%–150%)</span>
+          </div>
+          <div class="diagram-step success">
+            <span class="diagram-step-text">Persisted across restarts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../extra.css">
+  <title>Architecture Diagram</title>
+</head>
+<body>
+  <div class="diagram">
+    <div class="diagram-title">Issue #6 — Architecture & Data Flow</div>
+
+    <div class="diagram-flow-horizontal">
+      <!-- User Action -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">User</div>
+        <div class="diagram-flow-sublabel">Moves slider in Settings</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- Settings Component -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">DisplayAccessibility.tsx</div>
+        <div class="diagram-flow-sublabel">onChange → setChatFontSizeScale(scale)</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- Global Store -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">useGlobalStore</div>
+        <div class="diagram-flow-sublabel">Updates state + savePreference()</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- IPC to Main -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">storeSync.ts</div>
+        <div class="diagram-flow-sublabel">IPC → electron-store</div>
+      </div>
+    </div>
+
+    <div class="diagram-connector"></div>
+
+    <div class="diagram-flow-horizontal">
+      <!-- Main Process -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">electron-store</div>
+        <div class="diagram-flow-sublabel">Persists preferences.chatFontSizeScale</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- Renderer Reads -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">ChatMessages.tsx</div>
+        <div class="diagram-flow-sublabel">Reads chatFontSizeScale</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- CSS Custom Property -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">--chat-font-scale</div>
+        <div class="diagram-flow-sublabel">CSS custom property</div>
+      </div>
+      <div class="diagram-flow-arrow">→</div>
+
+      <!-- ChatMessage -->
+      <div class="diagram-flow-node">
+        <div class="diagram-flow-label">ChatMessage.tsx</div>
+        <div class="diagram-flow-sublabel">calc(14px * var(--chat-font-scale))</div>
+      </div>
+    </div>
+
+    <div class="diagram-connector"></div>
+
+    <div class="diagram-box renderer">
+      <div class="diagram-box-title">RENDERER PROCESS</div>
+      <div class="diagram-steps">
+        <div class="diagram-step">
+          <span class="diagram-step-num">1</span>
+          <span class="diagram-step-text">User drags slider in <span class="diagram-step-code">DisplayAccessibility.tsx</span></span>
+        </div>
+        <div class="diagram-step">
+          <span class="diagram-step-num">2</span>
+          <span class="diagram-step-text"><span class="diagram-step-code">setChatFontSizeScale(scale)</span> updates Zustand state</span>
+        </div>
+        <div class="diagram-step">
+          <span class="diagram-step-num">3</span>
+          <span class="diagram-step-text"><span class="diagram-step-code">savePreference("chatFontSizeScale", scale)</span> → IPC → main process</span>
+        </div>
+        <div class="diagram-step">
+          <span class="diagram-step-num">4</span>
+          <span class="diagram-step-text"><span class="diagram-step-code">ChatMessages.tsx</span> reads scale and injects <span class="diagram-step-code">style={{ '--chat-font-scale': scale }}</span></span>
+        </div>
+        <div class="diagram-step">
+          <span class="diagram-step-num">5</span>
+          <span class="diagram-step-text"><span class="diagram-step-code">ChatMessage.tsx MessageContainer</span> uses <span class="diagram-step-code">calc(0.875rem * var(--chat-font-scale, 1))</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
