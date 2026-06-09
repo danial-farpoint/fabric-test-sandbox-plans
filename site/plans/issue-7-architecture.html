@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+  <div class="diagram">
+    <div class="diagram-title">TaskDAGService Architecture: Before vs After</div>
+
+    <div class="diagram-comparison">
+      <!-- BEFORE -->
+      <div class="diagram-comparison-side before">
+        <div class="diagram-box-title" style="color:#ff6b6b;margin-bottom:12px;">BEFORE</div>
+        <div class="diagram-box main">
+          <div class="diagram-box-title">TaskDAGService</div>
+          <div style="font-family:monospace;font-size:12px;color:#e0e0e0;margin-top:8px;">
+            tasks: Map&lt;string, Task&gt;
+          </div>
+        </div>
+
+        <div class="diagram-steps" style="margin-top:16px;">
+          <div class="diagram-step error">
+            <div class="diagram-step-num">1</div>
+            <div class="diagram-step-text">
+              <span class="diagram-step-code">addTasks()</span><br>
+              Build temp adjacency of <b>ALL</b> tasks<br>
+              Run Kahn's on entire graph
+              <div style="color:#ff6b6b;font-size:11px;margin-top:2px;">O(V_all + E_all)</div>
+            </div>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step error">
+            <div class="diagram-step-num">2</div>
+            <div class="diagram-step-text">
+              <span class="diagram-step-code">completeTask()</span><br>
+              Recompute <b>ALL</b> statuses<br>
+              Scan every task in graph
+              <div style="color:#ff6b6b;font-size:11px;margin-top:2px;">O(V_all)</div>
+            </div>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step error">
+            <div class="diagram-step-num">3</div>
+            <div class="diagram-step-text">
+              <span class="diagram-step-code">getExecutionOrder()</span><br>
+              Rebuild reverse adjacency<br>
+              From scratch every call
+              <div style="color:#ff6b6b;font-size:11px;margin-top:2px;">O(V + E) rebuild</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="diagram-comparison-side after">
+        <div class="diagram-box-title" style="color:#6bcb77;margin-bottom:12px;">AFTER</div>
+        <div class="diagram-box renderer">
+          <div class="diagram-box-title">TaskDAGService</div>
+          <div style="font-family:monospace;font-size:12px;color:#e0e0e0;margin-top:8px;">
+            tasks: Map&lt;string, Task&gt;<br>
+            <span style="color:#6bcb77;">dependents: Map&lt;string, Set&lt;string&gt;&gt;</span>
+          </div>
+        </div>
+
+        <div class="diagram-steps" style="margin-top:16px;">
+          <div class="diagram-step success">
+            <div class="diagram-step-num">1</div>
+            <div class="diagram-step-text">
+              <span class="diagram-step-code">addTasks()</span><br>
+              Validate batch subgraph only<br>
+              Incremental cycle detection
+              <div style="color:#6bcb77;font-size:11px;margin-top:2px;">O(V_batch + E_batch)</div>
+            </div>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step success">
+            <div class="diagram-step-num">2</div>
+            <div class="diagram-step-text">
+              <span class="diagram-step-code">completeTask()</span><br>
+              Traverse affected dependents only<br>
+              Incremental status propagation
+              <div style="color:#6bcb77;font-size:11px;margin-top:2px;">O(affected_downstream)</div>
+            </div>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step success">
+            <div class="diagram-step-num">3</div>
+            <div class="diagram-step-text">
+              <span class="diagram-step-code">getExecutionOrder()</span><br>
+              Use persistent reverse index<br>
+              Zero rebuild overhead
+              <div style="color:#6bcb77;font-size:11px;margin-top:2px;">O(V + E) no rebuild</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

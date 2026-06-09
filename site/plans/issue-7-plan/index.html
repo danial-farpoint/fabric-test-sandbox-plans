@@ -1,0 +1,1078 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../issue-6-plan/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Issue #7 – Optimize TaskDAGService Performance - Implementation Plans</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#issue-7-optimize-taskdagservice-algorithmic-performance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Implementation Plans" class="md-header__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Implementation Plans
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Issue #7 – Optimize TaskDAGService Performance
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Implementation Plans" class="md-nav__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Implementation Plans
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plans
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plans
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-2-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Optimize DAGOrchestrator wall-clock execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-3-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #3 – Add reset button to chat input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-4-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #4 – Add copy button to code blocks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-6-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #6 – Font-size slider in Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #7 – Optimize TaskDAGService Performance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #7 – Optimize TaskDAGService Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-before-vs-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture: Before vs After
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#incremental-status-propagation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incremental Status Propagation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complexity-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complexity Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-before-vs-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture: Before vs After
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#incremental-status-propagation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incremental Status Propagation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complexity-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complexity Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="issue-7-optimize-taskdagservice-algorithmic-performance">Issue #7 – Optimize TaskDAGService Algorithmic Performance</h1>
+<h2 id="summary">Summary</h2>
+<p>Replace full-graph traversals in <code>TaskDAGService</code> with incremental, index-driven algorithms. Add a persistent reverse-dependency (<code>dependents</code>) index so that <code>addTasks</code>, <code>completeTask</code>, <code>skipTask</code>, and <code>getExecutionOrder</code> only touch the data they actually need to change or read.</p>
+<h2 id="root-cause-analysis">Root Cause Analysis</h2>
+<p>The current <code>TaskDAGService</code> implementation has three algorithmic hotspots:</p>
+<ol>
+<li>
+<p><strong>Full-graph cycle detection in <code>addTasks</code></strong>: Every batch add builds a temporary adjacency map of all existing + new tasks and runs Kahn's algorithm over the entire graph. Since existing tasks were already validated, cycles can only form within the new batch or between new tasks and existing tasks via new→existing edges. This is <strong>O(V_existing + V_new + E_all)</strong> instead of <strong>O(V_new + E_batch)</strong>.</p>
+</li>
+<li>
+<p><strong>Full-graph status recomputation</strong>: <code>addTasks</code> calls <code>recomputeAllStatuses()</code> which iterates every task. Similarly, <code>completeTask</code>/<code>skipTask</code> call <code>recomputeAndFindNewlyReady()</code> which recomputes <strong>all</strong> statuses instead of only visiting affected dependents.</p>
+</li>
+<li>
+<p><strong>No reverse-dependency index</strong>: Every operation that needs to find dependents (cycle detection, status propagation, <code>getExecutionOrder</code>) rebuilds the reverse adjacency from scratch by scanning all tasks. This is <strong>O(V + E)</strong> every time.</p>
+</li>
+</ol>
+<h2 id="proposed-solution">Proposed Solution</h2>
+<ol>
+<li>
+<p><strong>Add a persistent <code>dependents: Map&lt;string, Set&lt;string&gt;&gt;</code> reverse-dependency index</strong>, updated incrementally in <code>addTask</code>, <code>addTasks</code>, <code>rewireDependencies</code>, and cleared in <code>replaceTasks</code> / <code>restoreFromSnapshot</code>.</p>
+</li>
+<li>
+<p><strong>Incremental cycle detection for <code>addTasks</code></strong>: Only validate the subgraph of new tasks + their inter-dependencies (O(batch_size + batch_edges) instead of O(all_tasks + all_edges)).</p>
+</li>
+<li>
+<p><strong>Incremental status computation for <code>addTasks</code></strong>: Compute status for each new task directly from its dependencies' statuses instead of <code>recomputeAllStatuses()</code>.</p>
+</li>
+<li>
+<p><strong>Incremental "newly ready" propagation for <code>completeTask</code>/<code>skipTask</code></strong>: Use the <code>dependents</code> index to only visit downstream tasks that could become ready, instead of recomputing all statuses.</p>
+</li>
+<li>
+<p><strong>Faster <code>getExecutionOrder()</code></strong>: Use the persistent reverse index instead of rebuilding adjacency maps from scratch.</p>
+</li>
+</ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-7-architecture.png" data-desc-position="bottom"><img alt="Architecture Before vs After" src="../issue-7-architecture.png"></a></p>
+<h2 id="files-to-modify">Files to Modify</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/main/services/taskDAGService.ts</code></td>
+<td>Add <code>dependents</code> index; rewrite <code>addTasks</code>, <code>completeTask</code>, <code>skipTask</code>, <code>getExecutionOrder</code>, <code>rewireDependencies</code>, <code>replaceTasks</code>, <code>restoreFromSnapshot</code>, <code>addTask</code>, <code>hasCycle</code> for incremental operations</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-files">New Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tests/services/taskDAGService.performance.test.ts</code></td>
+<td>Tests for incremental cycle detection, incremental status propagation, reverse index consistency, and performance smoke tests</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-steps">Implementation Steps</h2>
+<ol>
+<li><strong>Add <code>dependents</code> index and helper methods</strong></li>
+<li>Add <code>private dependents = new Map&lt;string, Set&lt;string&gt;&gt;()</code></li>
+<li>Add <code>private addDependent(depId: string, taskId: string)</code> — idempotent insert into the Set</li>
+<li>Add <code>private removeDependent(depId: string, taskId: string)</code> — remove from the Set, clean up empty Sets</li>
+<li>
+<p>Add <code>private getDependents(taskId: string): Set&lt;string&gt;</code> — returns copy or empty set</p>
+</li>
+<li>
+<p><strong>Update <code>addTask</code> to maintain the index</strong></p>
+</li>
+<li>After validating deps and creating the task, call <code>addDependent(depId, task.id)</code> for each dependency</li>
+<li>
+<p>Initialize <code>dependents.set(task.id, new Set())</code> so every task has an entry</p>
+</li>
+<li>
+<p><strong>Rewrite <code>addTasks</code> for incremental cycle detection and status computation</strong></p>
+</li>
+<li>Keep the first pass (assign IDs, collect batchIds)</li>
+<li>Replace full-graph <code>hasCycle(tempAdj)</code> with a batch-local Kahn's algorithm:<ul>
+<li>Build <code>batchAdj</code> from batch tasks only</li>
+<li>Check in-degree counts within the batch</li>
+<li>Also verify no batch task depends on another batch task in a cycle that references existing tasks</li>
+<li>Since existing tasks never depend on new tasks, a cycle must be entirely within the batch</li>
+</ul>
+</li>
+<li>Remove <code>recomputeAllStatuses()</code> — compute each new task's status directly:<ul>
+<li>No deps → ready</li>
+<li>All deps completed/skipped → ready</li>
+<li>Otherwise → blocked</li>
+</ul>
+</li>
+<li>
+<p>Add tasks to <code>this.tasks</code> and update <code>dependents</code> index for each</p>
+</li>
+<li>
+<p><strong>Rewrite <code>completeTask</code> and <code>skipTask</code> for incremental propagation</strong></p>
+</li>
+<li>After marking the task terminal, collect newly ready tasks via BFS/DFS over dependents:<ul>
+<li>Start with the completed/skipped task's dependents</li>
+<li>For each dependent, check if all its dependencies are now terminal</li>
+<li>If yes and it was blocked/pending, mark it ready and add to newlyReady; enqueue its dependents</li>
+<li>If it was already ready/in_progress, skip (don't re-enqueue)</li>
+</ul>
+</li>
+<li>
+<p>Return <code>{ newlyReadyTasks }</code></p>
+</li>
+<li>
+<p><strong>Update <code>rewireDependencies</code> to maintain the index</strong></p>
+</li>
+<li>Before changing <code>task.dependencies</code>, remove old dependents entries</li>
+<li>After changing, add new dependents entries</li>
+<li>
+<p>Incremental status recompute: start from the rewired task and propagate downstream (same BFS as completeTask)</p>
+</li>
+<li>
+<p><strong>Update <code>replaceTasks</code> and <code>restoreFromSnapshot</code> to clear the index</strong></p>
+</li>
+<li>
+<p><code>this.dependents.clear()</code> before rebuilding</p>
+</li>
+<li>
+<p><strong>Rewrite <code>getExecutionOrder</code> to use the persistent index</strong></p>
+</li>
+<li>Use <code>this.dependents</code> directly instead of rebuilding the adjacency map</li>
+<li>
+<p>Kahn's algorithm using <code>tasks</code> for in-degree and <code>dependents</code> for the forward graph</p>
+</li>
+<li>
+<p><strong>Remove or simplify <code>recomputeAllStatuses</code> and <code>recomputeAndFindNewlyReady</code></strong></p>
+</li>
+<li><code>recomputeAllStatuses</code> is only needed by <code>restoreFromSnapshot</code> — keep it but make it private</li>
+<li>
+<p><code>recomputeAndFindNewlyReady</code> is no longer needed — replace with the incremental BFS in <code>completeTask</code>/<code>skipTask</code></p>
+</li>
+<li>
+<p><strong>Write performance tests</strong></p>
+</li>
+<li>Test that reverse index stays consistent after addTasks, completeTask, skipTask, rewireDependencies, replaceTasks</li>
+<li>Test incremental cycle detection with batch-only cycles</li>
+<li>Test incremental status propagation: complete a task and verify only downstream tasks are evaluated</li>
+<li>Test <code>getExecutionOrder</code> correctness is unchanged</li>
+</ol>
+<h2 id="test-strategy">Test Strategy</h2>
+<ul>
+<li><strong>Unit tests (existing)</strong>: All 15 existing test files must pass without modification:</li>
+<li><code>tests/services/taskDAGService.test.ts</code></li>
+<li><code>tests/services/taskDAGService.adversarial.test.ts</code></li>
+<li><code>tests/services/taskDAGService.failedStatus.test.ts</code></li>
+<li><code>tests/services/taskDAGService.mutations.adversarial.test.ts</code></li>
+<li><code>tests/services/taskDAGService.mutations.test.ts</code></li>
+<li><code>tests/services/taskDAGService.persistence.adversarial.test.ts</code></li>
+<li><code>tests/services/taskDAGService.persistence.test.ts</code></li>
+<li><code>tests/services/dagOrchestrator.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.1963-adversarial.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.adversarial.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.human-escalation.adversarial.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.human-escalation.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.session-scoping.test.ts</code></li>
+<li><code>tests/lproc_tests/dagTools.test.ts</code></li>
+<li>
+<p><code>tests/lproc_tests/dagToolsIpcEvents.test.ts</code></p>
+</li>
+<li>
+<p><strong>New tests</strong> (<code>tests/services/taskDAGService.performance.test.ts</code>):</p>
+</li>
+<li>Reverse index consistency after every mutation type</li>
+<li>Incremental cycle detection: cycles within batch detected, acyclic batches accepted</li>
+<li>Incremental status propagation: verify <code>completeTask</code> only evaluates downstream tasks</li>
+<li><code>getExecutionOrder</code> returns identical results before/after optimization</li>
+<li>
+<p>Performance smoke test: create a 500-task DAG, measure that <code>addTasks</code>, <code>completeTask</code>, <code>skipTask</code>, and <code>getExecutionOrder</code> complete in &lt; 50ms each</p>
+</li>
+<li>
+<p><strong>Edge cases</strong>:</p>
+</li>
+<li>Task with no dependencies → ready</li>
+<li>Task with all deps already terminal → ready</li>
+<li>Task with mixed deps (some terminal, some not) → blocked</li>
+<li>Completing a ready task that has no dependents → empty newlyReady</li>
+<li>Skipping a blocked task with completed deps (should not happen via normal API, but verify invariant)</li>
+<li><code>rewireDependencies</code> that creates a new cycle → rejected, index unchanged</li>
+<li><code>replaceTasks</code> with in-progress task → rejected before clearing index</li>
+<li><code>restoreFromSnapshot</code> rebuilds index correctly</li>
+</ul>
+<h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dependents</code> index gets out of sync with <code>tasks</code> map</td>
+<td>Extensive unit tests for index consistency; every mutation has a single code path for index updates</td>
+</tr>
+<tr>
+<td>Incremental cycle detection misses cross-batch cycles</td>
+<td>Since existing tasks never depend on new tasks, cycles must be within the batch — document this invariant and test it</td>
+</tr>
+<tr>
+<td><code>newlyReadyTasks</code> ordering changes</td>
+<td>Preserve existing ordering semantics (topological-ish); tests assert exact arrays</td>
+</tr>
+<tr>
+<td>Performance regression in small DAGs</td>
+<td>The new code paths have lower constant factors; smoke test on small DAGs to verify</td>
+</tr>
+<tr>
+<td><code>getExecutionOrder</code> behavior drift</td>
+<td>Keep the same Kahn's algorithm, just use persistent index instead of rebuilt maps</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagrams">Diagrams</h2>
+<h3 id="architecture-before-vs-after">Architecture: Before vs After</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-7-architecture.png" data-desc-position="bottom"><img alt="Architecture Before vs After" src="../issue-7-architecture.png"></a></p>
+<h3 id="incremental-status-propagation-flow">Incremental Status Propagation Flow</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-7-dataflow.png" data-desc-position="bottom"><img alt="Data Flow" src="../issue-7-dataflow.png"></a></p>
+<h3 id="complexity-comparison">Complexity Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>addTasks</code> (batch)</td>
+<td>O(V_all + E_all)</td>
+<td>O(V_batch + E_batch)</td>
+</tr>
+<tr>
+<td><code>completeTask</code></td>
+<td>O(V_all)</td>
+<td>O(affected_downstream)</td>
+</tr>
+<tr>
+<td><code>skipTask</code></td>
+<td>O(V_all)</td>
+<td>O(affected_downstream)</td>
+</tr>
+<tr>
+<td><code>getExecutionOrder</code></td>
+<td>O(V + E) with rebuild</td>
+<td>O(V + E) no rebuild</td>
+</tr>
+<tr>
+<td><code>rewireDependencies</code></td>
+<td>O(V_all + E_all)</td>
+<td>O(affected_downstream)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

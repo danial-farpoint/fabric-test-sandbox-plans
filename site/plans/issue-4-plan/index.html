@@ -1,0 +1,993 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../issue-3-plan/">
+      
+      
+        <link rel="next" href="../issue-6-plan/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Issue #4 – Add copy button to code blocks - Implementation Plans</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#issue-4-add-a-copy-to-clipboard-button-next-to-assistant-code-blocks-in-chat-messages" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Implementation Plans" class="md-header__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Implementation Plans
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Issue #4 – Add copy button to code blocks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Implementation Plans" class="md-nav__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Implementation Plans
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plans
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plans
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-2-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Optimize DAGOrchestrator wall-clock execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-3-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #3 – Add reset button to chat input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #4 – Add copy button to code blocks
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #4 – Add copy button to code blocks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-vs-proposed-code-block-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current vs Proposed Code Block Header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-6-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #6 – Font-size slider in Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-7-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #7 – Optimize TaskDAGService Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-vs-proposed-code-block-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current vs Proposed Code Block Header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="issue-4-add-a-copy-to-clipboard-button-next-to-assistant-code-blocks-in-chat-messages">Issue #4: Add a 'copy to clipboard' button next to assistant code blocks in chat messages</h1>
+<h2 id="summary">Summary</h2>
+<p>Add copy-to-clipboard support to terminal code blocks and improve visual feedback for all copy actions in assistant chat message code blocks.</p>
+<h2 id="root-cause-analysis">Root Cause Analysis</h2>
+<p><strong>Current state:</strong>
+- Regular code blocks (<code>code_block</code> / <code>code</code> segments) render a copy button in the <code>.code-header</code> via <code>CodeBlockBody</code> in <code>MarkdownText.tsx</code>
+- Terminal blocks (<code>terminal_command</code> / <code>terminal</code> segments) render only a "Run" button (<code>&gt;_ Run</code>) with no way to copy the command text
+- Copy feedback is minimal: a 300ms CSS <code>flash</code> animation that briefly adds a box-shadow to the button — users often miss this cue
+- The <code>.code-header</code> uses <code>justify-content: space-between</code>, placing the language label on the left and a single action button on the right</p>
+<p><strong>Desired state:</strong>
+- All code block types (regular + terminal) have a copy button
+- Copy feedback is explicit: a "Copied!" text label appears for ~1.5 seconds, giving users clear confirmation</p>
+<h2 id="proposed-solution">Proposed Solution</h2>
+<ol>
+<li>
+<p><strong>Add copy button to terminal blocks:</strong> In <code>CodeBlockBody</code>, when <code>segmentType === "terminal"</code>, render both the "Run" button and a new "Copy" button side-by-side in the header.</p>
+</li>
+<li>
+<p><strong>Improve copy feedback UX:</strong> Replace the transient CSS flash animation with a React state-driven approach:</p>
+</li>
+<li>Track <code>copied</code> boolean state in <code>CodeBlockBody</code></li>
+<li>On copy success, show a "Copied!" label (with optional checkmark icon) for 1.5s</li>
+<li>
+<p>Use <code>setTimeout</code> to clear the state, with cleanup on unmount</p>
+</li>
+<li>
+<p><strong>Style updates:</strong></p>
+</li>
+<li>Add <code>.code-header-actions</code> flex container for grouping multiple buttons</li>
+<li>Add <code>.copied-label</code> styles for the feedback text</li>
+<li>Keep existing <code>.code-block-button</code> styles, ensure buttons sit together with a small gap</li>
+</ol>
+<h2 id="files-to-modify">Files to Modify</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/renderer/Components/NewChatUI/AssistantMessage/MarkdownText.tsx</code></td>
+<td>Add copy button to terminal segments; replace flash animation with state-driven "Copied!" feedback; manage <code>copied</code> state with timeout</td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/NewChatUI/AssistantMessage/AssistantMessageStyles.tsx</code></td>
+<td>Add <code>.code-header-actions</code> flex container styles; add <code>.copied-label</code> text styles; keep or remove <code>.flash</code> animation (backward compat)</td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/Icons.tsx</code></td>
+<td>Add <code>CheckmarkIcon</code> SVG component for copy-success feedback</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-files">New Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tests/renderer/MarkdownText.copy.test.tsx</code></td>
+<td>Unit tests for copy button behavior on regular and terminal code blocks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-steps">Implementation Steps</h2>
+<ol>
+<li><strong>Add CheckmarkIcon to <code>Icons.tsx</code></strong></li>
+<li>
+<p>Create a small SVG checkmark icon (~12px) matching the existing <code>CopyIcon</code> stroke style</p>
+</li>
+<li>
+<p><strong>Update <code>CodeBlockBody</code> in <code>MarkdownText.tsx</code></strong></p>
+</li>
+<li>Import <code>CheckmarkIcon</code></li>
+<li>Add <code>copied</code> state: <code>const [copied, setCopied] = useState(false)</code></li>
+<li>Update <code>handleCopy</code> to set <code>copied = true</code> and start a 1500ms timeout that sets it back to <code>false</code></li>
+<li>In the header render:<ul>
+<li>For <code>terminal</code> segments: render a flex row with both the "Run" button and a "Copy" button</li>
+<li>For <code>code</code> segments: keep single "Copy" button</li>
+<li>When <code>copied</code> is true: show "Copied!" text (with checkmark icon) instead of the copy icon</li>
+</ul>
+</li>
+<li>
+<p>Add <code>useEffect</code> cleanup for the timeout on unmount</p>
+</li>
+<li>
+<p><strong>Update <code>AssistantMessageStyles.tsx</code></strong></p>
+</li>
+<li>Add <code>.code-header-actions</code> class:
+     <code>css
+     .code-header-actions {
+       display: flex;
+       align-items: center;
+       gap: ${themeSpacing.xs};
+     }</code></li>
+<li>Add <code>.copied-label</code> class:
+     <code>css
+     .copied-label {
+       display: flex;
+       align-items: center;
+       gap: 4px;
+       color: ${themeColors.unifiedUi.success};
+       font-size: 0.85em;
+       font-weight: ${themeTypography.fontWeight.semibold};
+     }</code></li>
+<li>
+<p>Keep <code>.code-block-button.flash</code> for backward compatibility (no longer used but harmless)</p>
+</li>
+<li>
+<p><strong>Write tests</strong></p>
+</li>
+<li>Test that regular code blocks show Copy button</li>
+<li>Test that terminal blocks show both Run and Copy buttons</li>
+<li>Test that clicking Copy triggers <code>navigator.clipboard.writeText</code> with correct content</li>
+<li>Test that "Copied!" feedback appears for 1.5s after click</li>
+<li>Test that timeout cleanup happens on unmount</li>
+</ol>
+<h2 id="test-strategy">Test Strategy</h2>
+<ul>
+<li><strong>Unit tests:</strong> Focus on <code>CodeBlockBody</code> component in isolation:</li>
+<li>Render with <code>segmentType="code"</code> → assert Copy button visible, no Run button</li>
+<li>Render with <code>segmentType="terminal"</code> → assert both Run and Copy buttons visible</li>
+<li>Simulate click on Copy → assert <code>navigator.clipboard.writeText</code> called with <code>innerCode</code></li>
+<li>Assert "Copied!" text appears immediately after click</li>
+<li>Use Jest fake timers to assert "Copied!" disappears after 1500ms</li>
+<li>
+<p>Unmount during copied state → assert no setState-after-unmount warning</p>
+</li>
+<li>
+<p><strong>Edge cases:</strong></p>
+</li>
+<li>Empty <code>innerCode</code> — copy should still work (writes empty string)</li>
+<li>Rapid double-click — should not queue multiple overlapping timeouts; use ref-guard or clear previous timeout</li>
+<li>Clipboard API failure — <code>catch</code> block logs error, no crash; button returns to default state</li>
+</ul>
+<h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clipboard API denied (e.g., in HTTP iframe)</td>
+<td><code>navigator.clipboard.writeText</code> is already wrapped in <code>.catch()</code>; no behavior change needed</td>
+</tr>
+<tr>
+<td>Rapid clicks create overlapping timeouts</td>
+<td>Clear existing timeout before setting a new one; store timeout ID in a ref</td>
+</tr>
+<tr>
+<td>Visual regression in existing code blocks</td>
+<td>Keep <code>.code-block-button</code> styles unchanged; only add new wrapper and label styles</td>
+</tr>
+<tr>
+<td><code>themeColors.unifiedUi.success</code> may not exist</td>
+<td>Verify theme token exists; fallback to a hardcoded green if needed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagrams">Diagrams</h2>
+<h3 id="current-vs-proposed-code-block-header">Current vs Proposed Code Block Header</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-4-ui-comparison.png" data-desc-position="bottom"><img alt="Current vs Proposed UI" src="../issue-4-ui-comparison.png"></a></p>
+<h3 id="component-flow">Component Flow</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-4-component-flow.png" data-desc-position="bottom"><img alt="Component Flow" src="../issue-4-component-flow.png"></a></p>
+<h2 id="additional-context">Additional Context</h2>
+<ul>
+<li>The existing copy functionality uses <code>navigator.clipboard.writeText()</code> with a CSS flash animation</li>
+<li>The <code>.code-header</code> flex layout already has <code>justify-content: space-between</code> making it straightforward to add a <code>.code-header-actions</code> wrapper on the right side</li>
+<li><code>CodeBlockBody</code> is memoized (<code>CodeBlockBodyMemo</code>) so adding state requires ensuring the memo comparator (in <code>MarkdownText</code>) still works correctly — the <code>copied</code> state is internal to <code>CodeBlockBody</code> and does not need to be in props, so memo behavior is unaffected</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

@@ -1,0 +1,964 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../issue-4-plan/">
+      
+      
+        <link rel="next" href="../issue-7-plan/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Issue #6 – Font-size slider in Settings - Implementation Plans</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#issue-6-add-font-size-slider-in-settings-to-scale-chat-message-text" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Implementation Plans" class="md-header__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Implementation Plans
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Issue #6 – Font-size slider in Settings
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Implementation Plans" class="md-nav__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Implementation Plans
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plans
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plans
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-2-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Optimize DAGOrchestrator wall-clock execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-3-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #3 – Add reset button to chat input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-4-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #4 – Add copy button to code blocks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #6 – Font-size slider in Settings
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #6 – Font-size slider in Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture / Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Journey
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-7-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #7 – Optimize TaskDAGService Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture / Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-journey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Journey
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="issue-6-add-font-size-slider-in-settings-to-scale-chat-message-text">Issue #6: Add font-size slider in Settings to scale chat message text</h1>
+<h2 id="summary">Summary</h2>
+<p>Add a user-configurable font-size slider in the Settings panel (General tab) that scales the text size of chat messages. This improves accessibility and allows users to customize readability based on their screen size and vision preferences.</p>
+<h2 id="root-cause-analysis">Root Cause Analysis</h2>
+<p>This is a feature request, not a bug. The current state:
+- Chat message text is hardcoded to <code>themeTypography.fontSize.sm</code> (14px equivalent) in <code>ChatMessage.tsx</code>
+- No user-facing control exists to adjust text size for accessibility or personal preference
+- Competing apps (Cursor, GitHub Copilot Chat, ChatGPT web) offer text size controls
+- The <code>themeTypography</code> system uses static rem values with no dynamic scaling mechanism</p>
+<p>The desired state:
+- A global preference <code>chatFontSizeScale</code> (float, default <code>1.0</code>, range <code>0.75–1.5</code>)
+- A slider UI in Settings → General → Display / Accessibility
+- The scale applied dynamically via CSS custom property <code>--chat-font-scale</code>
+- Value persisted across app restarts via electron-store</p>
+<h2 id="proposed-solution">Proposed Solution</h2>
+<ol>
+<li><strong>Schema &amp; State</strong>: Add <code>chatFontSizeScale</code> to <code>AppPreferences</code> in the store schema, global state, and initial defaults.</li>
+<li><strong>Settings UI</strong>: Create a new "Display / Accessibility" section in the General settings tab with a styled range slider labeled "Chat message text size" showing the current scale value.</li>
+<li><strong>Persistence</strong>: Wire the slider to <code>savePreference("chatFontSizeScale", value)</code> so changes survive app restarts.</li>
+<li><strong>Font Scaling</strong>: Inject <code>--chat-font-scale</code> as a CSS custom property on the chat messages container, and modify <code>ChatMessage.tsx</code>'s <code>MessageContainer</code> to scale its base font size using <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code>.</li>
+</ol>
+<h2 id="files-to-modify">Files to Modify</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/main/store/store.schema.ts</code></td>
+<td>Add <code>chatFontSizeScale?: number</code> to <code>AppPreferences</code> interface; add default <code>chatFontSizeScale: 1.0</code> to <code>STORE_DEFAULTS.preferences</code></td>
+</tr>
+<tr>
+<td><code>src/renderer/Stores/useGlobalStore.ts</code></td>
+<td>Add <code>chatFontSizeScale: number</code> to <code>GlobalState</code>; add <code>setChatFontSizeScale(scale)</code> to <code>GlobalActions</code>; hydrate from <code>initialPrefs</code>; add selector hooks <code>useChatFontSizeScale</code> / <code>useSetChatFontSizeScale</code></td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/Settings/Tabs/General/general.tsx</code></td>
+<td>Import and render <code>&lt;DisplayAccessibility /&gt;</code> component</td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/ChatMessage.tsx</code></td>
+<td>Update <code>MessageContainer</code> font-size to use <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code></td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/NewChatUI/ChatMessagesContainer/ChatMessages.tsx</code></td>
+<td>Apply inline style with <code>--chat-font-scale</code> CSS custom property from global store</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-files">New Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/renderer/Components/Settings/Tabs/General/displayAccessibility.tsx</code></td>
+<td>Slider component for chat font size scale, reads/writes via global store hooks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-steps">Implementation Steps</h2>
+<ol>
+<li><strong>Update Store Schema</strong> (<code>store.schema.ts</code>)</li>
+<li>Add <code>chatFontSizeScale?: number</code> to <code>AppPreferences</code> interface</li>
+<li>
+<p>Add <code>chatFontSizeScale: 1.0</code> to <code>STORE_DEFAULTS.preferences</code></p>
+</li>
+<li>
+<p><strong>Update Global Store</strong> (<code>useGlobalStore.ts</code>)</p>
+</li>
+<li>Add <code>chatFontSizeScale: number</code> to <code>GlobalState</code> interface</li>
+<li>Add <code>setChatFontSizeScale: (scale: number) =&gt; void</code> to <code>GlobalActions</code> interface</li>
+<li>Add to <code>defaultPreferenceSnapshot</code> in <code>getInitialPreferencesFromElectronStore()</code></li>
+<li>Hydrate from <code>initialPrefs.chatFontSizeScale</code> in store creation</li>
+<li>Implement the setter action that calls <code>savePreference("chatFontSizeScale", scale)</code></li>
+<li>
+<p>Export <code>useChatFontSizeScale</code> and <code>useSetChatFontSizeScale</code> selector hooks</p>
+</li>
+<li>
+<p><strong>Create Settings Slider Component</strong> (<code>displayAccessibility.tsx</code>)</p>
+</li>
+<li>Use the existing <code>Slider</code> styled component pattern from <code>D3CommunityGraph.tsx</code> as reference</li>
+<li>Create styled slider in <code>settingsStyle.tsx</code> or inline in the component</li>
+<li>Range: <code>0.75</code> to <code>1.5</code>, step <code>0.05</code>, default <code>1.0</code></li>
+<li>Show current value (e.g., "100%", "125%") next to the slider</li>
+<li>Use <code>useChatFontSizeScale</code> and <code>useSetChatFontSizeScale</code> hooks</li>
+<li>
+<p>Wrap in <code>SettingContainer</code> with id <code>setting-display-accessibility</code></p>
+</li>
+<li>
+<p><strong>Wire into General Settings Tab</strong> (<code>general.tsx</code>)</p>
+</li>
+<li>
+<p>Import <code>DisplayAccessibility</code> and insert it after <code>ChatManagement</code></p>
+</li>
+<li>
+<p><strong>Apply Font Scaling in ChatMessage</strong> (<code>ChatMessage.tsx</code>)</p>
+</li>
+<li>Change <code>MessageContainer</code> font-size from static <code>themeTypography.fontSize.sm</code> to <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code></li>
+<li>
+<p>Also scale <code>h1-h6</code> headings proportionally if desired (optional — can keep them em-based since they already scale relative to parent)</p>
+</li>
+<li>
+<p><strong>Inject CSS Custom Property</strong> (<code>ChatMessages.tsx</code>)</p>
+</li>
+<li>Read <code>chatFontSizeScale</code> from global store</li>
+<li>
+<p>Apply inline style <code>style={{ '--chat-font-scale': chatFontSizeScale }}</code> on the messages container wrapper</p>
+</li>
+<li>
+<p><strong>Add Tests</strong></p>
+</li>
+<li>Add test for the new preference hook in existing store test files</li>
+<li>Add test for the slider component rendering and interaction</li>
+</ol>
+<h2 id="test-strategy">Test Strategy</h2>
+<ul>
+<li><strong>Unit tests</strong>:</li>
+<li><code>useGlobalStore</code>: verify <code>chatFontSizeScale</code> default is <code>1.0</code>, setter calls <code>savePreference</code> with correct key</li>
+<li><code>displayAccessibility.tsx</code>: verify slider renders with correct initial value, changing slider updates store, displays percentage label</li>
+<li><code>ChatMessage.tsx</code>: verify <code>--chat-font-scale</code> CSS custom property is consumed in <code>MessageContainer</code> font-size</li>
+<li><strong>Integration tests</strong>:</li>
+<li>End-to-end: open Settings → General, move slider, verify chat text size changes in real-time</li>
+<li><strong>Edge cases</strong>:</li>
+<li>Slider at minimum (<code>0.75</code>) and maximum (<code>1.5</code>) values</li>
+<li>Store migration: old stores without <code>chatFontSizeScale</code> should default to <code>1.0</code></li>
+<li>Rapid slider changes: ensure debouncing or that sync is not excessively chatty</li>
+<li>Accessibility: slider should be keyboard-navigable</li>
+</ul>
+<h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Slider changes cause excessive IPC/re-renders</td>
+<td>The <code>savePreference</code> call is async and non-blocking; Zustand selectors minimize re-renders. No additional debouncing needed for a manual slider interaction.</td>
+</tr>
+<tr>
+<td>CSS custom property not supported in older Electron/Chromium</td>
+<td>Electron uses Chromium which has full CSS custom property support. No risk.</td>
+</tr>
+<tr>
+<td>Font scaling breaks code block / syntax highlighter layout</td>
+<td>Code blocks in <code>ChatMessage.tsx</code> use <code>em</code> and <code>rem</code> units that inherit from the message container. The scale is applied only to the base font size, so relative sizing is preserved.</td>
+</tr>
+<tr>
+<td>Migration of existing user stores without the new field</td>
+<td>The <code>??</code> (nullish coalescing) in <code>getInitialPreferencesFromElectronStore</code> defaults to <code>1.0</code>, ensuring backward compatibility.</td>
+</tr>
+<tr>
+<td>Slider UI is inconsistent with existing settings toggles</td>
+<td>Reuse the <code>SettingContainer</code>, <code>SettingTitle</code>, <code>SettingSection</code>, <code>SettingRow</code>, <code>SettingLabel</code> patterns from <code>settingsStyle.tsx</code>. The slider styled component can be modeled after the D3CommunityGraph slider but themed to match the settings panel.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagrams">Diagrams</h2>
+<h3 id="architecture-data-flow">Architecture / Data Flow</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-6-architecture.png" data-desc-position="bottom"><img alt="Architecture Diagram" src="../issue-6-architecture.png"></a></p>
+<h3 id="user-journey">User Journey</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-6-user-journey.png" data-desc-position="bottom"><img alt="User Journey Diagram" src="../issue-6-user-journey.png"></a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

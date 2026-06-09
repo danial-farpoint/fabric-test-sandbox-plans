@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Before/After UI Flow</title>
+  <link rel="stylesheet" href="../../extra.css">
+</head>
+<body>
+  <div class="diagram">
+    <div class="diagram-title">Before / After: Chat Input Reset Button</div>
+
+    <div class="diagram-comparison">
+      <!-- BEFORE -->
+      <div class="diagram-comparison-side before">
+        <div class="diagram-box-title">BEFORE</div>
+        <div class="diagram-steps">
+          <div class="diagram-step">
+            <span class="diagram-step-num">1</span>
+            <span class="diagram-step-text">User types message + attaches image</span>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step error">
+            <span class="diagram-step-num">2</span>
+            <span class="diagram-step-text">Wants to discard draft</span>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step error">
+            <span class="diagram-step-num">3</span>
+            <span class="diagram-step-text">Must select all & delete, or send then delete</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="diagram-comparison-side after">
+        <div class="diagram-box-title">AFTER</div>
+        <div class="diagram-steps">
+          <div class="diagram-step">
+            <span class="diagram-step-num">1</span>
+            <span class="diagram-step-text">User types message + attaches image</span>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step">
+            <span class="diagram-step-num">2</span>
+            <span class="diagram-step-text">Reset button appears automatically</span>
+          </div>
+          <div class="diagram-connector"></div>
+          <div class="diagram-step success">
+            <span class="diagram-step-num">3</span>
+            <span class="diagram-step-text">One click (or Escape) clears everything</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
