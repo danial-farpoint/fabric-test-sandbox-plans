@@ -6,10 +6,8 @@
       
       
       
-        <link rel="prev" href="../issue-3-plan/">
+        <link rel="prev" href="../issue-4-plan/">
       
-      
-        <link rel="next" href="../issue-6-plan/">
       
       
         
@@ -20,7 +18,7 @@
     
     
       
-        <title>Issue #4 – Add copy button to code blocks - Implementation Plans</title>
+        <title>Issue #6 – Font-size slider in Settings - Implementation Plans</title>
       
     
     
@@ -79,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#issue-4-add-a-copy-to-clipboard-button-next-to-assistant-code-blocks-in-chat-messages" class="md-skip">
+        <a href="#issue-6-add-font-size-slider-in-settings-to-scale-chat-message-text" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Issue #4 – Add copy button to code blocks
+              Issue #6 – Font-size slider in Settings
             
           </span>
         </div>
@@ -300,6 +298,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-4-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #4 – Add copy button to code blocks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -319,7 +345,7 @@
   <span class="md-ellipsis">
     
   
-    Issue #4 – Add copy button to code blocks
+    Issue #6 – Font-size slider in Settings
   
 
     
@@ -337,7 +363,7 @@
   <span class="md-ellipsis">
     
   
-    Issue #4 – Add copy button to code blocks
+    Issue #6 – Font-size slider in Settings
   
 
     
@@ -463,10 +489,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#current-vs-proposed-code-block-header" class="md-nav__link">
+  <a href="#architecture-data-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current vs Proposed Code Block Header
+        Architecture / Data Flow
       
     </span>
   </a>
@@ -474,10 +500,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#component-flow" class="md-nav__link">
+  <a href="#user-journey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Component Flow
+        User Journey
       
     </span>
   </a>
@@ -489,49 +515,10 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#additional-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Additional Context
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../issue-6-plan/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Issue #6 – Font-size slider in Settings
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -671,10 +658,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#current-vs-proposed-code-block-header" class="md-nav__link">
+  <a href="#architecture-data-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current vs Proposed Code Block Header
+        Architecture / Data Flow
       
     </span>
   </a>
@@ -682,10 +669,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#component-flow" class="md-nav__link">
+  <a href="#user-journey" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Component Flow
+        User Journey
       
     </span>
   </a>
@@ -694,17 +681,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#additional-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Additional Context
-      
-    </span>
-  </a>
   
 </li>
       
@@ -725,37 +701,26 @@
 
 
 
-<h1 id="issue-4-add-a-copy-to-clipboard-button-next-to-assistant-code-blocks-in-chat-messages">Issue #4: Add a 'copy to clipboard' button next to assistant code blocks in chat messages</h1>
+<h1 id="issue-6-add-font-size-slider-in-settings-to-scale-chat-message-text">Issue #6: Add font-size slider in Settings to scale chat message text</h1>
 <h2 id="summary">Summary</h2>
-<p>Add copy-to-clipboard support to terminal code blocks and improve visual feedback for all copy actions in assistant chat message code blocks.</p>
+<p>Add a user-configurable font-size slider in the Settings panel (General tab) that scales the text size of chat messages. This improves accessibility and allows users to customize readability based on their screen size and vision preferences.</p>
 <h2 id="root-cause-analysis">Root Cause Analysis</h2>
-<p><strong>Current state:</strong>
-- Regular code blocks (<code>code_block</code> / <code>code</code> segments) render a copy button in the <code>.code-header</code> via <code>CodeBlockBody</code> in <code>MarkdownText.tsx</code>
-- Terminal blocks (<code>terminal_command</code> / <code>terminal</code> segments) render only a "Run" button (<code>&gt;_ Run</code>) with no way to copy the command text
-- Copy feedback is minimal: a 300ms CSS <code>flash</code> animation that briefly adds a box-shadow to the button — users often miss this cue
-- The <code>.code-header</code> uses <code>justify-content: space-between</code>, placing the language label on the left and a single action button on the right</p>
-<p><strong>Desired state:</strong>
-- All code block types (regular + terminal) have a copy button
-- Copy feedback is explicit: a "Copied!" text label appears for ~1.5 seconds, giving users clear confirmation</p>
+<p>This is a feature request, not a bug. The current state:
+- Chat message text is hardcoded to <code>themeTypography.fontSize.sm</code> (14px equivalent) in <code>ChatMessage.tsx</code>
+- No user-facing control exists to adjust text size for accessibility or personal preference
+- Competing apps (Cursor, GitHub Copilot Chat, ChatGPT web) offer text size controls
+- The <code>themeTypography</code> system uses static rem values with no dynamic scaling mechanism</p>
+<p>The desired state:
+- A global preference <code>chatFontSizeScale</code> (float, default <code>1.0</code>, range <code>0.75–1.5</code>)
+- A slider UI in Settings → General → Display / Accessibility
+- The scale applied dynamically via CSS custom property <code>--chat-font-scale</code>
+- Value persisted across app restarts via electron-store</p>
 <h2 id="proposed-solution">Proposed Solution</h2>
 <ol>
-<li>
-<p><strong>Add copy button to terminal blocks:</strong> In <code>CodeBlockBody</code>, when <code>segmentType === "terminal"</code>, render both the "Run" button and a new "Copy" button side-by-side in the header.</p>
-</li>
-<li>
-<p><strong>Improve copy feedback UX:</strong> Replace the transient CSS flash animation with a React state-driven approach:</p>
-</li>
-<li>Track <code>copied</code> boolean state in <code>CodeBlockBody</code></li>
-<li>On copy success, show a "Copied!" label (with optional checkmark icon) for 1.5s</li>
-<li>
-<p>Use <code>setTimeout</code> to clear the state, with cleanup on unmount</p>
-</li>
-<li>
-<p><strong>Style updates:</strong></p>
-</li>
-<li>Add <code>.code-header-actions</code> flex container for grouping multiple buttons</li>
-<li>Add <code>.copied-label</code> styles for the feedback text</li>
-<li>Keep existing <code>.code-block-button</code> styles, ensure buttons sit together with a small gap</li>
+<li><strong>Schema &amp; State</strong>: Add <code>chatFontSizeScale</code> to <code>AppPreferences</code> in the store schema, global state, and initial defaults.</li>
+<li><strong>Settings UI</strong>: Create a new "Display / Accessibility" section in the General settings tab with a styled range slider labeled "Chat message text size" showing the current scale value.</li>
+<li><strong>Persistence</strong>: Wire the slider to <code>savePreference("chatFontSizeScale", value)</code> so changes survive app restarts.</li>
+<li><strong>Font Scaling</strong>: Inject <code>--chat-font-scale</code> as a CSS custom property on the chat messages container, and modify <code>ChatMessage.tsx</code>'s <code>MessageContainer</code> to scale its base font size using <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code>.</li>
 </ol>
 <h2 id="files-to-modify">Files to Modify</h2>
 <table>
@@ -767,16 +732,24 @@
 </thead>
 <tbody>
 <tr>
-<td><code>src/renderer/Components/NewChatUI/AssistantMessage/MarkdownText.tsx</code></td>
-<td>Add copy button to terminal segments; replace flash animation with state-driven "Copied!" feedback; manage <code>copied</code> state with timeout</td>
+<td><code>src/main/store/store.schema.ts</code></td>
+<td>Add <code>chatFontSizeScale?: number</code> to <code>AppPreferences</code> interface; add default <code>chatFontSizeScale: 1.0</code> to <code>STORE_DEFAULTS.preferences</code></td>
 </tr>
 <tr>
-<td><code>src/renderer/Components/NewChatUI/AssistantMessage/AssistantMessageStyles.tsx</code></td>
-<td>Add <code>.code-header-actions</code> flex container styles; add <code>.copied-label</code> text styles; keep or remove <code>.flash</code> animation (backward compat)</td>
+<td><code>src/renderer/Stores/useGlobalStore.ts</code></td>
+<td>Add <code>chatFontSizeScale: number</code> to <code>GlobalState</code>; add <code>setChatFontSizeScale(scale)</code> to <code>GlobalActions</code>; hydrate from <code>initialPrefs</code>; add selector hooks <code>useChatFontSizeScale</code> / <code>useSetChatFontSizeScale</code></td>
 </tr>
 <tr>
-<td><code>src/renderer/Components/Icons.tsx</code></td>
-<td>Add <code>CheckmarkIcon</code> SVG component for copy-success feedback</td>
+<td><code>src/renderer/Components/Settings/Tabs/General/general.tsx</code></td>
+<td>Import and render <code>&lt;DisplayAccessibility /&gt;</code> component</td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/ChatMessage.tsx</code></td>
+<td>Update <code>MessageContainer</code> font-size to use <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code></td>
+</tr>
+<tr>
+<td><code>src/renderer/Components/NewChatUI/ChatMessagesContainer/ChatMessages.tsx</code></td>
+<td>Apply inline style with <code>--chat-font-scale</code> CSS custom property from global store</td>
 </tr>
 </tbody>
 </table>
@@ -790,81 +763,79 @@
 </thead>
 <tbody>
 <tr>
-<td><code>tests/renderer/MarkdownText.copy.test.tsx</code></td>
-<td>Unit tests for copy button behavior on regular and terminal code blocks</td>
+<td><code>src/renderer/Components/Settings/Tabs/General/displayAccessibility.tsx</code></td>
+<td>Slider component for chat font size scale, reads/writes via global store hooks</td>
 </tr>
 </tbody>
 </table>
 <h2 id="implementation-steps">Implementation Steps</h2>
 <ol>
-<li><strong>Add CheckmarkIcon to <code>Icons.tsx</code></strong></li>
+<li><strong>Update Store Schema</strong> (<code>store.schema.ts</code>)</li>
+<li>Add <code>chatFontSizeScale?: number</code> to <code>AppPreferences</code> interface</li>
 <li>
-<p>Create a small SVG checkmark icon (~12px) matching the existing <code>CopyIcon</code> stroke style</p>
-</li>
-<li>
-<p><strong>Update <code>CodeBlockBody</code> in <code>MarkdownText.tsx</code></strong></p>
-</li>
-<li>Import <code>CheckmarkIcon</code></li>
-<li>Add <code>copied</code> state: <code>const [copied, setCopied] = useState(false)</code></li>
-<li>Update <code>handleCopy</code> to set <code>copied = true</code> and start a 1500ms timeout that sets it back to <code>false</code></li>
-<li>In the header render:<ul>
-<li>For <code>terminal</code> segments: render a flex row with both the "Run" button and a "Copy" button</li>
-<li>For <code>code</code> segments: keep single "Copy" button</li>
-<li>When <code>copied</code> is true: show "Copied!" text (with checkmark icon) instead of the copy icon</li>
-</ul>
+<p>Add <code>chatFontSizeScale: 1.0</code> to <code>STORE_DEFAULTS.preferences</code></p>
 </li>
 <li>
-<p>Add <code>useEffect</code> cleanup for the timeout on unmount</p>
+<p><strong>Update Global Store</strong> (<code>useGlobalStore.ts</code>)</p>
+</li>
+<li>Add <code>chatFontSizeScale: number</code> to <code>GlobalState</code> interface</li>
+<li>Add <code>setChatFontSizeScale: (scale: number) =&gt; void</code> to <code>GlobalActions</code> interface</li>
+<li>Add to <code>defaultPreferenceSnapshot</code> in <code>getInitialPreferencesFromElectronStore()</code></li>
+<li>Hydrate from <code>initialPrefs.chatFontSizeScale</code> in store creation</li>
+<li>Implement the setter action that calls <code>savePreference("chatFontSizeScale", scale)</code></li>
+<li>
+<p>Export <code>useChatFontSizeScale</code> and <code>useSetChatFontSizeScale</code> selector hooks</p>
 </li>
 <li>
-<p><strong>Update <code>AssistantMessageStyles.tsx</code></strong></p>
+<p><strong>Create Settings Slider Component</strong> (<code>displayAccessibility.tsx</code>)</p>
 </li>
-<li>Add <code>.code-header-actions</code> class:
-     <code>css
-     .code-header-actions {
-       display: flex;
-       align-items: center;
-       gap: ${themeSpacing.xs};
-     }</code></li>
-<li>Add <code>.copied-label</code> class:
-     <code>css
-     .copied-label {
-       display: flex;
-       align-items: center;
-       gap: 4px;
-       color: ${themeColors.unifiedUi.success};
-       font-size: 0.85em;
-       font-weight: ${themeTypography.fontWeight.semibold};
-     }</code></li>
+<li>Use the existing <code>Slider</code> styled component pattern from <code>D3CommunityGraph.tsx</code> as reference</li>
+<li>Create styled slider in <code>settingsStyle.tsx</code> or inline in the component</li>
+<li>Range: <code>0.75</code> to <code>1.5</code>, step <code>0.05</code>, default <code>1.0</code></li>
+<li>Show current value (e.g., "100%", "125%") next to the slider</li>
+<li>Use <code>useChatFontSizeScale</code> and <code>useSetChatFontSizeScale</code> hooks</li>
 <li>
-<p>Keep <code>.code-block-button.flash</code> for backward compatibility (no longer used but harmless)</p>
+<p>Wrap in <code>SettingContainer</code> with id <code>setting-display-accessibility</code></p>
 </li>
 <li>
-<p><strong>Write tests</strong></p>
+<p><strong>Wire into General Settings Tab</strong> (<code>general.tsx</code>)</p>
 </li>
-<li>Test that regular code blocks show Copy button</li>
-<li>Test that terminal blocks show both Run and Copy buttons</li>
-<li>Test that clicking Copy triggers <code>navigator.clipboard.writeText</code> with correct content</li>
-<li>Test that "Copied!" feedback appears for 1.5s after click</li>
-<li>Test that timeout cleanup happens on unmount</li>
+<li>
+<p>Import <code>DisplayAccessibility</code> and insert it after <code>ChatManagement</code></p>
+</li>
+<li>
+<p><strong>Apply Font Scaling in ChatMessage</strong> (<code>ChatMessage.tsx</code>)</p>
+</li>
+<li>Change <code>MessageContainer</code> font-size from static <code>themeTypography.fontSize.sm</code> to <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code></li>
+<li>
+<p>Also scale <code>h1-h6</code> headings proportionally if desired (optional — can keep them em-based since they already scale relative to parent)</p>
+</li>
+<li>
+<p><strong>Inject CSS Custom Property</strong> (<code>ChatMessages.tsx</code>)</p>
+</li>
+<li>Read <code>chatFontSizeScale</code> from global store</li>
+<li>
+<p>Apply inline style <code>style={{ '--chat-font-scale': chatFontSizeScale }}</code> on the messages container wrapper</p>
+</li>
+<li>
+<p><strong>Add Tests</strong></p>
+</li>
+<li>Add test for the new preference hook in existing store test files</li>
+<li>Add test for the slider component rendering and interaction</li>
 </ol>
 <h2 id="test-strategy">Test Strategy</h2>
 <ul>
-<li><strong>Unit tests:</strong> Focus on <code>CodeBlockBody</code> component in isolation:</li>
-<li>Render with <code>segmentType="code"</code> → assert Copy button visible, no Run button</li>
-<li>Render with <code>segmentType="terminal"</code> → assert both Run and Copy buttons visible</li>
-<li>Simulate click on Copy → assert <code>navigator.clipboard.writeText</code> called with <code>innerCode</code></li>
-<li>Assert "Copied!" text appears immediately after click</li>
-<li>Use Jest fake timers to assert "Copied!" disappears after 1500ms</li>
-<li>
-<p>Unmount during copied state → assert no setState-after-unmount warning</p>
-</li>
-<li>
-<p><strong>Edge cases:</strong></p>
-</li>
-<li>Empty <code>innerCode</code> — copy should still work (writes empty string)</li>
-<li>Rapid double-click — should not queue multiple overlapping timeouts; use ref-guard or clear previous timeout</li>
-<li>Clipboard API failure — <code>catch</code> block logs error, no crash; button returns to default state</li>
+<li><strong>Unit tests</strong>:</li>
+<li><code>useGlobalStore</code>: verify <code>chatFontSizeScale</code> default is <code>1.0</code>, setter calls <code>savePreference</code> with correct key</li>
+<li><code>displayAccessibility.tsx</code>: verify slider renders with correct initial value, changing slider updates store, displays percentage label</li>
+<li><code>ChatMessage.tsx</code>: verify <code>--chat-font-scale</code> CSS custom property is consumed in <code>MessageContainer</code> font-size</li>
+<li><strong>Integration tests</strong>:</li>
+<li>End-to-end: open Settings → General, move slider, verify chat text size changes in real-time</li>
+<li><strong>Edge cases</strong>:</li>
+<li>Slider at minimum (<code>0.75</code>) and maximum (<code>1.5</code>) values</li>
+<li>Store migration: old stores without <code>chatFontSizeScale</code> should default to <code>1.0</code></li>
+<li>Rapid slider changes: ensure debouncing or that sync is not excessively chatty</li>
+<li>Accessibility: slider should be keyboard-navigable</li>
 </ul>
 <h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
 <table>
@@ -876,34 +847,32 @@
 </thead>
 <tbody>
 <tr>
-<td>Clipboard API denied (e.g., in HTTP iframe)</td>
-<td><code>navigator.clipboard.writeText</code> is already wrapped in <code>.catch()</code>; no behavior change needed</td>
+<td>Slider changes cause excessive IPC/re-renders</td>
+<td>The <code>savePreference</code> call is async and non-blocking; Zustand selectors minimize re-renders. No additional debouncing needed for a manual slider interaction.</td>
 </tr>
 <tr>
-<td>Rapid clicks create overlapping timeouts</td>
-<td>Clear existing timeout before setting a new one; store timeout ID in a ref</td>
+<td>CSS custom property not supported in older Electron/Chromium</td>
+<td>Electron uses Chromium which has full CSS custom property support. No risk.</td>
 </tr>
 <tr>
-<td>Visual regression in existing code blocks</td>
-<td>Keep <code>.code-block-button</code> styles unchanged; only add new wrapper and label styles</td>
+<td>Font scaling breaks code block / syntax highlighter layout</td>
+<td>Code blocks in <code>ChatMessage.tsx</code> use <code>em</code> and <code>rem</code> units that inherit from the message container. The scale is applied only to the base font size, so relative sizing is preserved.</td>
 </tr>
 <tr>
-<td><code>themeColors.unifiedUi.success</code> may not exist</td>
-<td>Verify theme token exists; fallback to a hardcoded green if needed</td>
+<td>Migration of existing user stores without the new field</td>
+<td>The <code>??</code> (nullish coalescing) in <code>getInitialPreferencesFromElectronStore</code> defaults to <code>1.0</code>, ensuring backward compatibility.</td>
+</tr>
+<tr>
+<td>Slider UI is inconsistent with existing settings toggles</td>
+<td>Reuse the <code>SettingContainer</code>, <code>SettingTitle</code>, <code>SettingSection</code>, <code>SettingRow</code>, <code>SettingLabel</code> patterns from <code>settingsStyle.tsx</code>. The slider styled component can be modeled after the D3CommunityGraph slider but themed to match the settings panel.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="diagrams">Diagrams</h2>
-<h3 id="current-vs-proposed-code-block-header">Current vs Proposed Code Block Header</h3>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-4-ui-comparison.png" data-desc-position="bottom"><img alt="Current vs Proposed UI" src="../issue-4-ui-comparison.png"></a></p>
-<h3 id="component-flow">Component Flow</h3>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-4-component-flow.png" data-desc-position="bottom"><img alt="Component Flow" src="../issue-4-component-flow.png"></a></p>
-<h2 id="additional-context">Additional Context</h2>
-<ul>
-<li>The existing copy functionality uses <code>navigator.clipboard.writeText()</code> with a CSS flash animation</li>
-<li>The <code>.code-header</code> flex layout already has <code>justify-content: space-between</code> making it straightforward to add a <code>.code-header-actions</code> wrapper on the right side</li>
-<li><code>CodeBlockBody</code> is memoized (<code>CodeBlockBodyMemo</code>) so adding state requires ensuring the memo comparator (in <code>MarkdownText</code>) still works correctly — the <code>copied</code> state is internal to <code>CodeBlockBody</code> and does not need to be in props, so memo behavior is unaffected</li>
-</ul>
+<h3 id="architecture-data-flow">Architecture / Data Flow</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-6-architecture.png" data-desc-position="bottom"><img alt="Architecture Diagram" src="../issue-6-architecture.png"></a></p>
+<h3 id="user-journey">User Journey</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-6-user-journey.png" data-desc-position="bottom"><img alt="User Journey Diagram" src="../issue-6-user-journey.png"></a></p>
 
 
 
