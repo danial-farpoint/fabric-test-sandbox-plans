@@ -6,10 +6,8 @@
       
       
       
-        <link rel="prev" href="../issue-4-plan/">
+        <link rel="prev" href="../issue-6-plan/">
       
-      
-        <link rel="next" href="../issue-7-plan/">
       
       
         
@@ -20,7 +18,7 @@
     
     
       
-        <title>Issue #6 – Font-size slider in Settings - Implementation Plans</title>
+        <title>Issue #7 – Optimize TaskDAGService Performance - Implementation Plans</title>
       
     
     
@@ -79,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#issue-6-add-font-size-slider-in-settings-to-scale-chat-message-text" class="md-skip">
+        <a href="#issue-7-optimize-taskdagservice-algorithmic-performance" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Issue #6 – Font-size slider in Settings
+              Issue #7 – Optimize TaskDAGService Performance
             
           </span>
         </div>
@@ -328,6 +326,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../issue-6-plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #6 – Font-size slider in Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -347,7 +373,7 @@
   <span class="md-ellipsis">
     
   
-    Issue #6 – Font-size slider in Settings
+    Issue #7 – Optimize TaskDAGService Performance
   
 
     
@@ -365,7 +391,7 @@
   <span class="md-ellipsis">
     
   
-    Issue #6 – Font-size slider in Settings
+    Issue #7 – Optimize TaskDAGService Performance
   
 
     
@@ -491,10 +517,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#architecture-data-flow" class="md-nav__link">
+  <a href="#architecture-before-vs-after" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture / Data Flow
+        Architecture: Before vs After
       
     </span>
   </a>
@@ -502,10 +528,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#user-journey" class="md-nav__link">
+  <a href="#incremental-status-propagation-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        User Journey
+        Incremental Status Propagation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complexity-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complexity Comparison
       
     </span>
   </a>
@@ -521,34 +558,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../issue-7-plan/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Issue #7 – Optimize TaskDAGService Performance
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -688,10 +697,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#architecture-data-flow" class="md-nav__link">
+  <a href="#architecture-before-vs-after" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture / Data Flow
+        Architecture: Before vs After
       
     </span>
   </a>
@@ -699,10 +708,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#user-journey" class="md-nav__link">
+  <a href="#incremental-status-propagation-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        User Journey
+        Incremental Status Propagation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complexity-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complexity Comparison
       
     </span>
   </a>
@@ -731,27 +751,41 @@
 
 
 
-<h1 id="issue-6-add-font-size-slider-in-settings-to-scale-chat-message-text">Issue #6: Add font-size slider in Settings to scale chat message text</h1>
+<h1 id="issue-7-optimize-taskdagservice-algorithmic-performance">Issue #7 – Optimize TaskDAGService Algorithmic Performance</h1>
 <h2 id="summary">Summary</h2>
-<p>Add a user-configurable font-size slider in the Settings panel (General tab) that scales the text size of chat messages. This improves accessibility and allows users to customize readability based on their screen size and vision preferences.</p>
+<p>Replace full-graph traversals in <code>TaskDAGService</code> with incremental, index-driven algorithms. Add a persistent reverse-dependency (<code>dependents</code>) index so that <code>addTasks</code>, <code>completeTask</code>, <code>skipTask</code>, and <code>getExecutionOrder</code> only touch the data they actually need to change or read.</p>
 <h2 id="root-cause-analysis">Root Cause Analysis</h2>
-<p>This is a feature request, not a bug. The current state:
-- Chat message text is hardcoded to <code>themeTypography.fontSize.sm</code> (14px equivalent) in <code>ChatMessage.tsx</code>
-- No user-facing control exists to adjust text size for accessibility or personal preference
-- Competing apps (Cursor, GitHub Copilot Chat, ChatGPT web) offer text size controls
-- The <code>themeTypography</code> system uses static rem values with no dynamic scaling mechanism</p>
-<p>The desired state:
-- A global preference <code>chatFontSizeScale</code> (float, default <code>1.0</code>, range <code>0.75–1.5</code>)
-- A slider UI in Settings → General → Display / Accessibility
-- The scale applied dynamically via CSS custom property <code>--chat-font-scale</code>
-- Value persisted across app restarts via electron-store</p>
+<p>The current <code>TaskDAGService</code> implementation has three algorithmic hotspots:</p>
+<ol>
+<li>
+<p><strong>Full-graph cycle detection in <code>addTasks</code></strong>: Every batch add builds a temporary adjacency map of all existing + new tasks and runs Kahn's algorithm over the entire graph. Since existing tasks were already validated, cycles can only form within the new batch or between new tasks and existing tasks via new→existing edges. This is <strong>O(V_existing + V_new + E_all)</strong> instead of <strong>O(V_new + E_batch)</strong>.</p>
+</li>
+<li>
+<p><strong>Full-graph status recomputation</strong>: <code>addTasks</code> calls <code>recomputeAllStatuses()</code> which iterates every task. Similarly, <code>completeTask</code>/<code>skipTask</code> call <code>recomputeAndFindNewlyReady()</code> which recomputes <strong>all</strong> statuses instead of only visiting affected dependents.</p>
+</li>
+<li>
+<p><strong>No reverse-dependency index</strong>: Every operation that needs to find dependents (cycle detection, status propagation, <code>getExecutionOrder</code>) rebuilds the reverse adjacency from scratch by scanning all tasks. This is <strong>O(V + E)</strong> every time.</p>
+</li>
+</ol>
 <h2 id="proposed-solution">Proposed Solution</h2>
 <ol>
-<li><strong>Schema &amp; State</strong>: Add <code>chatFontSizeScale</code> to <code>AppPreferences</code> in the store schema, global state, and initial defaults.</li>
-<li><strong>Settings UI</strong>: Create a new "Display / Accessibility" section in the General settings tab with a styled range slider labeled "Chat message text size" showing the current scale value.</li>
-<li><strong>Persistence</strong>: Wire the slider to <code>savePreference("chatFontSizeScale", value)</code> so changes survive app restarts.</li>
-<li><strong>Font Scaling</strong>: Inject <code>--chat-font-scale</code> as a CSS custom property on the chat messages container, and modify <code>ChatMessage.tsx</code>'s <code>MessageContainer</code> to scale its base font size using <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code>.</li>
+<li>
+<p><strong>Add a persistent <code>dependents: Map&lt;string, Set&lt;string&gt;&gt;</code> reverse-dependency index</strong>, updated incrementally in <code>addTask</code>, <code>addTasks</code>, <code>rewireDependencies</code>, and cleared in <code>replaceTasks</code> / <code>restoreFromSnapshot</code>.</p>
+</li>
+<li>
+<p><strong>Incremental cycle detection for <code>addTasks</code></strong>: Only validate the subgraph of new tasks + their inter-dependencies (O(batch_size + batch_edges) instead of O(all_tasks + all_edges)).</p>
+</li>
+<li>
+<p><strong>Incremental status computation for <code>addTasks</code></strong>: Compute status for each new task directly from its dependencies' statuses instead of <code>recomputeAllStatuses()</code>.</p>
+</li>
+<li>
+<p><strong>Incremental "newly ready" propagation for <code>completeTask</code>/<code>skipTask</code></strong>: Use the <code>dependents</code> index to only visit downstream tasks that could become ready, instead of recomputing all statuses.</p>
+</li>
+<li>
+<p><strong>Faster <code>getExecutionOrder()</code></strong>: Use the persistent reverse index instead of rebuilding adjacency maps from scratch.</p>
+</li>
 </ol>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-7-architecture.png" data-desc-position="bottom"><img alt="Architecture Before vs After" src="../issue-7-architecture.png"></a></p>
 <h2 id="files-to-modify">Files to Modify</h2>
 <table>
 <thead>
@@ -762,24 +796,8 @@
 </thead>
 <tbody>
 <tr>
-<td><code>src/main/store/store.schema.ts</code></td>
-<td>Add <code>chatFontSizeScale?: number</code> to <code>AppPreferences</code> interface; add default <code>chatFontSizeScale: 1.0</code> to <code>STORE_DEFAULTS.preferences</code></td>
-</tr>
-<tr>
-<td><code>src/renderer/Stores/useGlobalStore.ts</code></td>
-<td>Add <code>chatFontSizeScale: number</code> to <code>GlobalState</code>; add <code>setChatFontSizeScale(scale)</code> to <code>GlobalActions</code>; hydrate from <code>initialPrefs</code>; add selector hooks <code>useChatFontSizeScale</code> / <code>useSetChatFontSizeScale</code></td>
-</tr>
-<tr>
-<td><code>src/renderer/Components/Settings/Tabs/General/general.tsx</code></td>
-<td>Import and render <code>&lt;DisplayAccessibility /&gt;</code> component</td>
-</tr>
-<tr>
-<td><code>src/renderer/Components/ChatMessage.tsx</code></td>
-<td>Update <code>MessageContainer</code> font-size to use <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code></td>
-</tr>
-<tr>
-<td><code>src/renderer/Components/NewChatUI/ChatMessagesContainer/ChatMessages.tsx</code></td>
-<td>Apply inline style with <code>--chat-font-scale</code> CSS custom property from global store</td>
+<td><code>src/main/services/taskDAGService.ts</code></td>
+<td>Add <code>dependents</code> index; rewrite <code>addTasks</code>, <code>completeTask</code>, <code>skipTask</code>, <code>getExecutionOrder</code>, <code>rewireDependencies</code>, <code>replaceTasks</code>, <code>restoreFromSnapshot</code>, <code>addTask</code>, <code>hasCycle</code> for incremental operations</td>
 </tr>
 </tbody>
 </table>
@@ -793,79 +811,138 @@
 </thead>
 <tbody>
 <tr>
-<td><code>src/renderer/Components/Settings/Tabs/General/displayAccessibility.tsx</code></td>
-<td>Slider component for chat font size scale, reads/writes via global store hooks</td>
+<td><code>tests/services/taskDAGService.performance.test.ts</code></td>
+<td>Tests for incremental cycle detection, incremental status propagation, reverse index consistency, and performance smoke tests</td>
 </tr>
 </tbody>
 </table>
 <h2 id="implementation-steps">Implementation Steps</h2>
 <ol>
-<li><strong>Update Store Schema</strong> (<code>store.schema.ts</code>)</li>
-<li>Add <code>chatFontSizeScale?: number</code> to <code>AppPreferences</code> interface</li>
+<li><strong>Add <code>dependents</code> index and helper methods</strong></li>
+<li>Add <code>private dependents = new Map&lt;string, Set&lt;string&gt;&gt;()</code></li>
+<li>Add <code>private addDependent(depId: string, taskId: string)</code> — idempotent insert into the Set</li>
+<li>Add <code>private removeDependent(depId: string, taskId: string)</code> — remove from the Set, clean up empty Sets</li>
 <li>
-<p>Add <code>chatFontSizeScale: 1.0</code> to <code>STORE_DEFAULTS.preferences</code></p>
+<p>Add <code>private getDependents(taskId: string): Set&lt;string&gt;</code> — returns copy or empty set</p>
 </li>
 <li>
-<p><strong>Update Global Store</strong> (<code>useGlobalStore.ts</code>)</p>
+<p><strong>Update <code>addTask</code> to maintain the index</strong></p>
 </li>
-<li>Add <code>chatFontSizeScale: number</code> to <code>GlobalState</code> interface</li>
-<li>Add <code>setChatFontSizeScale: (scale: number) =&gt; void</code> to <code>GlobalActions</code> interface</li>
-<li>Add to <code>defaultPreferenceSnapshot</code> in <code>getInitialPreferencesFromElectronStore()</code></li>
-<li>Hydrate from <code>initialPrefs.chatFontSizeScale</code> in store creation</li>
-<li>Implement the setter action that calls <code>savePreference("chatFontSizeScale", scale)</code></li>
+<li>After validating deps and creating the task, call <code>addDependent(depId, task.id)</code> for each dependency</li>
 <li>
-<p>Export <code>useChatFontSizeScale</code> and <code>useSetChatFontSizeScale</code> selector hooks</p>
+<p>Initialize <code>dependents.set(task.id, new Set())</code> so every task has an entry</p>
 </li>
 <li>
-<p><strong>Create Settings Slider Component</strong> (<code>displayAccessibility.tsx</code>)</p>
+<p><strong>Rewrite <code>addTasks</code> for incremental cycle detection and status computation</strong></p>
 </li>
-<li>Use the existing <code>Slider</code> styled component pattern from <code>D3CommunityGraph.tsx</code> as reference</li>
-<li>Create styled slider in <code>settingsStyle.tsx</code> or inline in the component</li>
-<li>Range: <code>0.75</code> to <code>1.5</code>, step <code>0.05</code>, default <code>1.0</code></li>
-<li>Show current value (e.g., "100%", "125%") next to the slider</li>
-<li>Use <code>useChatFontSizeScale</code> and <code>useSetChatFontSizeScale</code> hooks</li>
-<li>
-<p>Wrap in <code>SettingContainer</code> with id <code>setting-display-accessibility</code></p>
+<li>Keep the first pass (assign IDs, collect batchIds)</li>
+<li>Replace full-graph <code>hasCycle(tempAdj)</code> with a batch-local Kahn's algorithm:<ul>
+<li>Build <code>batchAdj</code> from batch tasks only</li>
+<li>Check in-degree counts within the batch</li>
+<li>Also verify no batch task depends on another batch task in a cycle that references existing tasks</li>
+<li>Since existing tasks never depend on new tasks, a cycle must be entirely within the batch</li>
+</ul>
 </li>
-<li>
-<p><strong>Wire into General Settings Tab</strong> (<code>general.tsx</code>)</p>
-</li>
-<li>
-<p>Import <code>DisplayAccessibility</code> and insert it after <code>ChatManagement</code></p>
-</li>
-<li>
-<p><strong>Apply Font Scaling in ChatMessage</strong> (<code>ChatMessage.tsx</code>)</p>
-</li>
-<li>Change <code>MessageContainer</code> font-size from static <code>themeTypography.fontSize.sm</code> to <code>calc(${themeTypography.fontSize.sm} * var(--chat-font-scale, 1))</code></li>
-<li>
-<p>Also scale <code>h1-h6</code> headings proportionally if desired (optional — can keep them em-based since they already scale relative to parent)</p>
+<li>Remove <code>recomputeAllStatuses()</code> — compute each new task's status directly:<ul>
+<li>No deps → ready</li>
+<li>All deps completed/skipped → ready</li>
+<li>Otherwise → blocked</li>
+</ul>
 </li>
 <li>
-<p><strong>Inject CSS Custom Property</strong> (<code>ChatMessages.tsx</code>)</p>
-</li>
-<li>Read <code>chatFontSizeScale</code> from global store</li>
-<li>
-<p>Apply inline style <code>style={{ '--chat-font-scale': chatFontSizeScale }}</code> on the messages container wrapper</p>
+<p>Add tasks to <code>this.tasks</code> and update <code>dependents</code> index for each</p>
 </li>
 <li>
-<p><strong>Add Tests</strong></p>
+<p><strong>Rewrite <code>completeTask</code> and <code>skipTask</code> for incremental propagation</strong></p>
 </li>
-<li>Add test for the new preference hook in existing store test files</li>
-<li>Add test for the slider component rendering and interaction</li>
+<li>After marking the task terminal, collect newly ready tasks via BFS/DFS over dependents:<ul>
+<li>Start with the completed/skipped task's dependents</li>
+<li>For each dependent, check if all its dependencies are now terminal</li>
+<li>If yes and it was blocked/pending, mark it ready and add to newlyReady; enqueue its dependents</li>
+<li>If it was already ready/in_progress, skip (don't re-enqueue)</li>
+</ul>
+</li>
+<li>
+<p>Return <code>{ newlyReadyTasks }</code></p>
+</li>
+<li>
+<p><strong>Update <code>rewireDependencies</code> to maintain the index</strong></p>
+</li>
+<li>Before changing <code>task.dependencies</code>, remove old dependents entries</li>
+<li>After changing, add new dependents entries</li>
+<li>
+<p>Incremental status recompute: start from the rewired task and propagate downstream (same BFS as completeTask)</p>
+</li>
+<li>
+<p><strong>Update <code>replaceTasks</code> and <code>restoreFromSnapshot</code> to clear the index</strong></p>
+</li>
+<li>
+<p><code>this.dependents.clear()</code> before rebuilding</p>
+</li>
+<li>
+<p><strong>Rewrite <code>getExecutionOrder</code> to use the persistent index</strong></p>
+</li>
+<li>Use <code>this.dependents</code> directly instead of rebuilding the adjacency map</li>
+<li>
+<p>Kahn's algorithm using <code>tasks</code> for in-degree and <code>dependents</code> for the forward graph</p>
+</li>
+<li>
+<p><strong>Remove or simplify <code>recomputeAllStatuses</code> and <code>recomputeAndFindNewlyReady</code></strong></p>
+</li>
+<li><code>recomputeAllStatuses</code> is only needed by <code>restoreFromSnapshot</code> — keep it but make it private</li>
+<li>
+<p><code>recomputeAndFindNewlyReady</code> is no longer needed — replace with the incremental BFS in <code>completeTask</code>/<code>skipTask</code></p>
+</li>
+<li>
+<p><strong>Write performance tests</strong></p>
+</li>
+<li>Test that reverse index stays consistent after addTasks, completeTask, skipTask, rewireDependencies, replaceTasks</li>
+<li>Test incremental cycle detection with batch-only cycles</li>
+<li>Test incremental status propagation: complete a task and verify only downstream tasks are evaluated</li>
+<li>Test <code>getExecutionOrder</code> correctness is unchanged</li>
 </ol>
 <h2 id="test-strategy">Test Strategy</h2>
 <ul>
-<li><strong>Unit tests</strong>:</li>
-<li><code>useGlobalStore</code>: verify <code>chatFontSizeScale</code> default is <code>1.0</code>, setter calls <code>savePreference</code> with correct key</li>
-<li><code>displayAccessibility.tsx</code>: verify slider renders with correct initial value, changing slider updates store, displays percentage label</li>
-<li><code>ChatMessage.tsx</code>: verify <code>--chat-font-scale</code> CSS custom property is consumed in <code>MessageContainer</code> font-size</li>
-<li><strong>Integration tests</strong>:</li>
-<li>End-to-end: open Settings → General, move slider, verify chat text size changes in real-time</li>
-<li><strong>Edge cases</strong>:</li>
-<li>Slider at minimum (<code>0.75</code>) and maximum (<code>1.5</code>) values</li>
-<li>Store migration: old stores without <code>chatFontSizeScale</code> should default to <code>1.0</code></li>
-<li>Rapid slider changes: ensure debouncing or that sync is not excessively chatty</li>
-<li>Accessibility: slider should be keyboard-navigable</li>
+<li><strong>Unit tests (existing)</strong>: All 15 existing test files must pass without modification:</li>
+<li><code>tests/services/taskDAGService.test.ts</code></li>
+<li><code>tests/services/taskDAGService.adversarial.test.ts</code></li>
+<li><code>tests/services/taskDAGService.failedStatus.test.ts</code></li>
+<li><code>tests/services/taskDAGService.mutations.adversarial.test.ts</code></li>
+<li><code>tests/services/taskDAGService.mutations.test.ts</code></li>
+<li><code>tests/services/taskDAGService.persistence.adversarial.test.ts</code></li>
+<li><code>tests/services/taskDAGService.persistence.test.ts</code></li>
+<li><code>tests/services/dagOrchestrator.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.1963-adversarial.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.adversarial.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.human-escalation.adversarial.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.human-escalation.test.ts</code></li>
+<li><code>tests/stores/useDAGStore.session-scoping.test.ts</code></li>
+<li><code>tests/lproc_tests/dagTools.test.ts</code></li>
+<li>
+<p><code>tests/lproc_tests/dagToolsIpcEvents.test.ts</code></p>
+</li>
+<li>
+<p><strong>New tests</strong> (<code>tests/services/taskDAGService.performance.test.ts</code>):</p>
+</li>
+<li>Reverse index consistency after every mutation type</li>
+<li>Incremental cycle detection: cycles within batch detected, acyclic batches accepted</li>
+<li>Incremental status propagation: verify <code>completeTask</code> only evaluates downstream tasks</li>
+<li><code>getExecutionOrder</code> returns identical results before/after optimization</li>
+<li>
+<p>Performance smoke test: create a 500-task DAG, measure that <code>addTasks</code>, <code>completeTask</code>, <code>skipTask</code>, and <code>getExecutionOrder</code> complete in &lt; 50ms each</p>
+</li>
+<li>
+<p><strong>Edge cases</strong>:</p>
+</li>
+<li>Task with no dependencies → ready</li>
+<li>Task with all deps already terminal → ready</li>
+<li>Task with mixed deps (some terminal, some not) → blocked</li>
+<li>Completing a ready task that has no dependents → empty newlyReady</li>
+<li>Skipping a blocked task with completed deps (should not happen via normal API, but verify invariant)</li>
+<li><code>rewireDependencies</code> that creates a new cycle → rejected, index unchanged</li>
+<li><code>replaceTasks</code> with in-progress task → rejected before clearing index</li>
+<li><code>restoreFromSnapshot</code> rebuilds index correctly</li>
 </ul>
 <h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
 <table>
@@ -877,32 +954,69 @@
 </thead>
 <tbody>
 <tr>
-<td>Slider changes cause excessive IPC/re-renders</td>
-<td>The <code>savePreference</code> call is async and non-blocking; Zustand selectors minimize re-renders. No additional debouncing needed for a manual slider interaction.</td>
+<td><code>dependents</code> index gets out of sync with <code>tasks</code> map</td>
+<td>Extensive unit tests for index consistency; every mutation has a single code path for index updates</td>
 </tr>
 <tr>
-<td>CSS custom property not supported in older Electron/Chromium</td>
-<td>Electron uses Chromium which has full CSS custom property support. No risk.</td>
+<td>Incremental cycle detection misses cross-batch cycles</td>
+<td>Since existing tasks never depend on new tasks, cycles must be within the batch — document this invariant and test it</td>
 </tr>
 <tr>
-<td>Font scaling breaks code block / syntax highlighter layout</td>
-<td>Code blocks in <code>ChatMessage.tsx</code> use <code>em</code> and <code>rem</code> units that inherit from the message container. The scale is applied only to the base font size, so relative sizing is preserved.</td>
+<td><code>newlyReadyTasks</code> ordering changes</td>
+<td>Preserve existing ordering semantics (topological-ish); tests assert exact arrays</td>
 </tr>
 <tr>
-<td>Migration of existing user stores without the new field</td>
-<td>The <code>??</code> (nullish coalescing) in <code>getInitialPreferencesFromElectronStore</code> defaults to <code>1.0</code>, ensuring backward compatibility.</td>
+<td>Performance regression in small DAGs</td>
+<td>The new code paths have lower constant factors; smoke test on small DAGs to verify</td>
 </tr>
 <tr>
-<td>Slider UI is inconsistent with existing settings toggles</td>
-<td>Reuse the <code>SettingContainer</code>, <code>SettingTitle</code>, <code>SettingSection</code>, <code>SettingRow</code>, <code>SettingLabel</code> patterns from <code>settingsStyle.tsx</code>. The slider styled component can be modeled after the D3CommunityGraph slider but themed to match the settings panel.</td>
+<td><code>getExecutionOrder</code> behavior drift</td>
+<td>Keep the same Kahn's algorithm, just use persistent index instead of rebuilt maps</td>
 </tr>
 </tbody>
 </table>
 <h2 id="diagrams">Diagrams</h2>
-<h3 id="architecture-data-flow">Architecture / Data Flow</h3>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-6-architecture.png" data-desc-position="bottom"><img alt="Architecture Diagram" src="../issue-6-architecture.png"></a></p>
-<h3 id="user-journey">User Journey</h3>
-<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-6-user-journey.png" data-desc-position="bottom"><img alt="User Journey Diagram" src="../issue-6-user-journey.png"></a></p>
+<h3 id="architecture-before-vs-after">Architecture: Before vs After</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-7-architecture.png" data-desc-position="bottom"><img alt="Architecture Before vs After" src="../issue-7-architecture.png"></a></p>
+<h3 id="incremental-status-propagation-flow">Incremental Status Propagation Flow</h3>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../issue-7-dataflow.png" data-desc-position="bottom"><img alt="Data Flow" src="../issue-7-dataflow.png"></a></p>
+<h3 id="complexity-comparison">Complexity Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>addTasks</code> (batch)</td>
+<td>O(V_all + E_all)</td>
+<td>O(V_batch + E_batch)</td>
+</tr>
+<tr>
+<td><code>completeTask</code></td>
+<td>O(V_all)</td>
+<td>O(affected_downstream)</td>
+</tr>
+<tr>
+<td><code>skipTask</code></td>
+<td>O(V_all)</td>
+<td>O(affected_downstream)</td>
+</tr>
+<tr>
+<td><code>getExecutionOrder</code></td>
+<td>O(V + E) with rebuild</td>
+<td>O(V + E) no rebuild</td>
+</tr>
+<tr>
+<td><code>rewireDependencies</code></td>
+<td>O(V_all + E_all)</td>
+<td>O(affected_downstream)</td>
+</tr>
+</tbody>
+</table>
 
 
 
